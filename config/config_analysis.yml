@@ -1,0 +1,11 @@
+# Configuration file for analysis scripts
+domain: "southPacific"
+startdate: "19600101.00"
+enddate: "20211231.00"
+
+# directory where files are saved
+saved_dirpath: './cloud_band_files'
+# directory where to save figures
+dir_figures: './cloud_band_figures/'
+flag_use_saveddailyvar: True
+flag_djfm: False
