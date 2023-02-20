@@ -17,7 +17,7 @@ lat_north: -10
 lat_south: -50
 
 # Input files directory
-clouddata_path: '/data/directory/lie/ERA5/'
+clouddata_path: './data/directory/files/ERA5/'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
 # Data specific
 # calculate daily average for detection
