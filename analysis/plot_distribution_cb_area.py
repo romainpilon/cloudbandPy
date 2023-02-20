@@ -2,7 +2,7 @@
 # coding: utf-8
 """
 Script to create histogram showing the percentage of the cloud band number distribution
-Run: python CloudBandDetection/analysis/plot_distribution_cb_area.py config_analysis.yml
+Run: python cloudbandPy/analysis/plot_distribution_cb_area.py config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
@@ -11,8 +11,8 @@ import numpy as np
 import sys
 
 
-from CloudBandDetection.src.figure_tools import set_fontsize
-from CloudBandDetection.src.io_utilities import load_ymlfile, load_multiyears_data
+from cloudbandPy.src.figure_tools import set_fontsize
+from cloudbandPy.src.io_utilities import load_ymlfile, load_multiyears_data
 
 
 def create_bins(min_value=0.01, max_value=100, stepbins=5):
