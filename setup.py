@@ -1,4 +1,4 @@
-"""Setup script for installing CloudBandDetection"""
+"""Setup script for installing cloudbandPy"""
 
 from setuptools import setup, find_packages
 
@@ -10,7 +10,7 @@ with open("requirements.txt") as f:
 
 
 setup(
-    name="cloudbanddetection",
+    name="cloudbandPy",
     version="1.0.0",
     author="Romain Pilon",
     author_email="romain.pilon@gmail.com",

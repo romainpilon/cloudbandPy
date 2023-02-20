@@ -31,17 +31,9 @@ try:
 except:
     pass
 
-DIRCODE = "/users/rpilon/codes/unil/CloudBandDetection/"
-sys.path.insert(0, DIRCODE + "src/")
-from figure_tools import set_fontsize
-from io_utilities import load_ymlfile, load_multiyears_data, openncfile, get_variable_lonlat_from_domain
-from tracking import compute_density
-
-# FIXME
-# from CloudBandDetection.src.figure_tools import set_fontsize
-# from CloudBandDetection.src.io_utilities import load_ymlfile, load_multiyears_data
-# from CloudBandDetection.src.tracking import compute_density
-# from CloudBandDetection.src.utilities import wrapTo180
+from cloudbandPy.src.figure_tools import set_fontsize
+from cloudbandPy.src.io_utilities import load_ymlfile, load_multiyears_data, openncfile, get_variable_lonlat_from_domain
+from cloudbandPy.src.tracking import compute_density
 
 
 def overlay_array_on_map_withlatitudes(

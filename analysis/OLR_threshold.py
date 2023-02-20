@@ -17,8 +17,8 @@ from skimage import exposure
 import os, sys
 
 
-from CloudBandDetection.src.figure_tools import set_fontsize
-from CloudBandDetection.src.io_utilities import load_ymlfile, load_multiyears_data
+from cloudbandPy.src.figure_tools import set_fontsize
+from cloudbandPy.src.io_utilities import load_ymlfile, load_multiyears_data
 
 
 def plot_histogram(variable4analyis):

@@ -18,9 +18,10 @@ cd "${DIR}" || return
 
 # Set paths
 # for code source
-srcdir=/users/rpilon/codes/unil/CloudBandDetection # FIXME
+srcdir=./cloudbandPy
 # for temporary config files. we create one config file per year to save memory (instead of loading 43 years of reanalysis)
-tmpdir_config=/users/rpilon/tmp # FIXME
+tmpdir_config=./tmp
+
 [[ ! -d "${tmpdir_config}" ]] &&  mkdir "${tmpdir_config}"
 
 # Copy original config file into tmp directory and change its start/end year
