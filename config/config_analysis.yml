@@ -1,0 +1,21 @@
+# Configuration file for analysis scripts
+domain: "southPacific"
+startdate: "19830101.00"
+enddate: "20191231.00"
+
+# directory where files are saved
+saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files/'
+# directory where to save figures
+dir_figures: './cloud_band_figures/'
+load_saved_files: True
+
+period_detection: 24.
+
+select_djfm: False
+
+# Note: the southern border matters a lot: Polar regions has lots of cold clouds.
+hemisphere: "south"
+lon_west: 130
+lon_east: 290
+lat_north: 5
+lat_south: -50

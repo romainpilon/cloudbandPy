@@ -1,0 +1,32 @@
+# Configuration file for analysis scripts
+# Here we aim at plotting a world map overlayed by cloud bands of each hemisphere 
+domain: "southernhemisphere"
+startdate: "19600101.00"
+enddate: "20211231.00"
+
+# directory where files are saved
+saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files'
+# directory where to save figures
+dir_figures: './cloud_band_figures/'
+load_saved_files: True
+
+period_detection: 24.
+
+select_djfm: False
+
+# FIXME remove before  publishing
+# Directory where netcdf files of variable are
+clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/ERA5/netcdf/3hourly/surface_level/'
+varname_infilename: 'top_net_thermal_radiation'
+varname: 'ttr'
+timecoord_name: 'time'
+xcoord_name: 'longitude'
+ycoord_name: 'latitude'
+olr_convert2wm2: True
+
+# Note: the southern border matters a lot: Polar regions has lots of cold clouds.
+hemisphere: "south"
+lon_west: 0
+lon_east: 360
+lat_north: -10
+lat_south: -50

@@ -1,0 +1,15 @@
+# Cloud band identification parameters for the southern hemisphere
+hemisphere: "south"
+
+OLR_THRESHOLD: 210
+CLOUD_BAND_AREA_THRESHOLD: 10e5 # km2
+# Cloud band must cross the tropical line
+TOP_LATITUDE: -20
+BOTTOM_LATITUDE: -27
+# Clouds bands must have a certain inclinaton (top: NW, bottom: SE)
+ANGLE_MIN: -90
+ANGLE_MAX: -5
+
+# Tracking parameters
+# overlap fraction threshold. Clouds that overlap more than this between times are tracked
+othresh: 0.4
