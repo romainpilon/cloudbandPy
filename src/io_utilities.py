@@ -220,26 +220,50 @@ def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, conf
 
 
 def load_npydata(filename: str = None, config: dict = None, varname: str = None) -> np.ndarray:
-    dirfiles = config["saved_dirpath"]
-    filist_of_var = [fi for fi in os.listdir(dirfiles) if varname in fi]
-    if len(filist_of_var):
-        if filename:
-            var2load = np.load(f"{dirfiles}/{filename}.npy")
-        elif config and not filename:
-            var2load = np.load(f"{dirfiles}/{varname}{config['startdate']}-{config['enddate']}-{config['domain']}.npy")
+    if not filename and not config:
+        raise ValueError("Either filename or config must be provided.")
+
+    dirpath = config.get("saved_dirpath", ".")
+    if filename:
+        filepath = os.path.join(dirpath, f"{filename}.npy")
+    else:
+        startdate = config.get("startdate", "")
+        enddate = config.get("enddate", "")
+        domain = config.get("domain", "")
+        filepath = os.path.join(dirpath, f"{varname}{startdate}-{enddate}-{domain}.npy")
+
+    if not os.path.isfile(filepath):
+        raise FileNotFoundError(f"{filepath} not found.")
+
+    try:
+        var2load = np.load(filepath)
+    except Exception as e:
+        raise e
+
     return var2load
 
 
 def load_pickledata(filename: str = None, config: dict = None, varname: str = None) -> np.ndarray:
-    dirfiles = config["saved_dirpath"]
-    filist_of_var = [fi for fi in os.listdir(dirfiles) if varname in fi]
-    if len(filist_of_var):
-        if filename:
-            fd = open(f"{dirfiles}/{filename}.pickle", "rb")
-        elif config and not filename:
-            fd = open(f"{dirfiles}/{varname}{config['startdate']}-{config['enddate']}-{config['domain']}.pickle", "rb")
-        var2load = pickle.load(fd, fix_imports=True)
-        fd.close()
+    if not filename and not config:
+        raise ValueError("Either filename or config must be provided.")
+
+    dirpath = config.get("saved_dirpath", ".")
+    if filename:
+        filepath = os.path.join(dirpath, f"{filename}")
+    else:
+        startdate = config.get("startdate", "")
+        enddate = config.get("enddate", "")
+        domain = config.get("domain", "")
+        filepath = os.path.join(dirpath, f"{varname}{startdate}-{enddate}-{domain}")
+
+    try:
+        with open(filepath, "rb") as f:
+            var2load = pickle.load(f, fix_imports=True)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"{filepath} not found.")
+    except Exception as e:
+        raise e
+
     return var2load
 
 
@@ -251,20 +275,26 @@ def load_data_from_saved_var_files(config: dict, varname: str):
     """
     logger = logging.getLogger("io_utilities.load_data_from_saved_var_files")
     if config["load_saved_files"]:
+        print(
+            f"Load data from: {config['datetime_startdate'].strftime('%Y%m%d.%H')} to {config['datetime_enddate'].strftime('%Y%m%d.%H')}"
+        )
         if varname == "list_of_cloud_bands":
-            datalist = []
+            datalist = np.array([])
             for iyear in range(int(config["datetime_startdate"].year), int(config["datetime_enddate"].year) + 1):
-                filename = f"{varname}{iyear}0101.00-{iyear}1231.00-{config['domain']}"
+                filename = f"{varname}{iyear}{config['datetime_startdate'].strftime('%m%d.%H')}-{iyear}{config['datetime_enddate'].strftime('%m%d.%H')}-{config['domain']}.pickle"
                 if config["select_djfm"]:
-                    filename += "_djfm"
+                    filename = filename.rsplit(".", 1)[0] + "_djfm" + ".pickle"
                 var4oneyear = load_pickledata(filename=filename, config=config, varname=varname)
-                datalist.extend(var4oneyear)
+                if datalist.size == 0:
+                    datalist = var4oneyear
+                else:
+                    datalist = np.concatenate([datalist, var4oneyear], axis=0)
         elif varname == "daily_variable":
             tmplist = []
             for iyear in range(int(config["datetime_startdate"].year), int(config["datetime_enddate"].year) + 1):
-                filename = f"{varname}{iyear}0101.00-{iyear}1231.00-{config['domain']}"
+                filename = f"{varname}{iyear}0101.00-{iyear}1231.00-{config['domain']}.npy"
                 if config["select_djfm"]:
-                    filename += "_djfm"
+                    filename = filename.rsplit(".", 1)[0] + "_djfm" + ".npy"
                 var4oneyear = load_npydata(filename=filename, config=config, varname=varname)
                 tmplist.append(var4oneyear)
             datalist = np.concatenate(tmplist, axis=0)
@@ -272,7 +302,8 @@ def load_data_from_saved_var_files(config: dict, varname: str):
             listofdates = create_list_of_dates(config)
             id_start = np.argwhere(listofdates == config["datetime_startdate"])[0][0]
             id_end = np.argwhere(listofdates == config["datetime_enddate"])[0][0]
-            interval = int(24. / config["period_detection"]) # FIXME make it possible 4 any period of detection, saved dependant
+            interval = int(24.0 / config["period_detection"])
+            # FIXME make it possible 4 any period of detection, saved dependant
             datalist = datalist[id_start : id_end + interval, :, :]
         return datalist
     else:
