@@ -36,8 +36,10 @@ def create_list_of_dates(config: dict) -> pandas.date_range:
     else:
         logger.error("Detection period must be 24h, 12h, 6h, 3h or 1h!")
         sys.exit(1)
-    listofdates = pandas.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq)
-    return listofdates
+    return pandas.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq)
+
+
+
 
 
 def add_startend_datetime2config(config: dict) -> tuple:
