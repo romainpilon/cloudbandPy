@@ -39,23 +39,15 @@ def create_list_of_dates(config: dict) -> pandas.date_range:
     return pandas.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq)
 
 
-
-
-
 def add_startend_datetime2config(config: dict) -> tuple:
     """
     Transforms start/end times from the config file in 'yyyymmdd.hh' format to datetime format
     Update config file
     """
-    startdate = config["startdate"]
-    enddate = config["enddate"]
     timeformat_in_datetime = "%Y%m%d.%H"
-    datetime_startdate = dt.datetime.strptime(startdate, timeformat_in_datetime)
-    datetime_enddate = dt.datetime.strptime(enddate, timeformat_in_datetime)
     config.update(
-            {
-                "datetime_startdate": datetime_startdate,
-                "datetime_enddate": datetime_enddate,
-            }
-        )
-    return
+        {
+            "datetime_startdate": dt.datetime.strptime(config["startdate"], timeformat_in_datetime),
+            "datetime_enddate": dt.datetime.strptime(config["enddate"], timeformat_in_datetime),
+        }
+    )
