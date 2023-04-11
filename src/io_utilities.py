@@ -279,16 +279,13 @@ def load_data_from_saved_var_files(config: dict, varname: str):
             f"Load data from: {config['datetime_startdate'].strftime('%Y%m%d.%H')} to {config['datetime_enddate'].strftime('%Y%m%d.%H')}"
         )
         if varname == "list_of_cloud_bands":
-            datalist = np.array([])
+            datalist = []
             for iyear in range(int(config["datetime_startdate"].year), int(config["datetime_enddate"].year) + 1):
                 filename = f"{varname}{iyear}{config['datetime_startdate'].strftime('%m%d.%H')}-{iyear}{config['datetime_enddate'].strftime('%m%d.%H')}-{config['domain']}.pickle"
                 if config["select_djfm"]:
                     filename = filename.rsplit(".", 1)[0] + "_djfm" + ".pickle"
                 var4oneyear = load_pickledata(filename=filename, config=config, varname=varname)
-                if datalist.size == 0:
-                    datalist = var4oneyear
-                else:
-                    datalist = np.concatenate([datalist, var4oneyear], axis=0)
+                datalist.extend(var4oneyear)
         elif varname == "daily_variable":
             tmplist = []
             for iyear in range(int(config["datetime_startdate"].year), int(config["datetime_enddate"].year) + 1):

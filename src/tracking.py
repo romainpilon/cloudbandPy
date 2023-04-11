@@ -219,7 +219,7 @@ def compute_density(lats: np.ndarray, lons: np.ndarray, dates: list, list_of_clo
             ntot_cb += icb[1].cloud_band_array
     numberofyear = len(set([el.year for el in dates]))
     # check if the period covers one or multiple full years
-    if dates[0].strftime("%m%d") == "0101" and dates[-1].strftime("%m%d") == "1231":
+    if dates[0].month == 1 and dates[0].day == 1 and dates[-1].month == 12 and dates[-1].day == 31:
         density = np.divide(ntot_cb, numberofyear)
     else:
         logger.warning(

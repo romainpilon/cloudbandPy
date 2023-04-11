@@ -4,8 +4,8 @@
 run_inheritance_tracking: True
 
 # Start/end date and time
-startdate: "20210219.00"
-enddate: "20210228.00"
+startdate: "19790101.00"
+enddate: "20211231.00"
 
 # Domain
 domain: "southPacific"
@@ -43,7 +43,7 @@ parameters_file: '/users/rpilon/codes/unil/CloudBandDetection/parameters/paramet
 saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of the variable
-save_listcloudbands: True # list containing lists of cloud band (1 list per day)
+save_listcloudbands: False # list containing lists of cloud band (1 list per day)
 
 # To load files saved in saved_dirpath and not load files containing raw data
 load_saved_files: False
@@ -57,5 +57,5 @@ fig_time_evolution_object: False
 fig_time_evolution_var_cloudband: False
 fig_overlay_cloudband: False
 fig_show_bbox_around_blobs: False
-fig_inheritance_tracking: True
-fig_density: False
+fig_inheritance_tracking: False
+fig_density: True
