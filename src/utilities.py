@@ -51,8 +51,6 @@ def wrapTo180(xin) -> Any:
     return xout
 
 
-def convert_olr_in_wm2(olrin) -> Any:
-    var1 = np.multiply(olrin, -1)
-    olr_in_wm2 = np.divide(var1, 3600)
-    del var1
-    return olr_in_wm2
+def convert_olr_in_wm2(olrin):
+    # Convert top thermal radiation in J m**-2 into W.m**-2
+    return np.divide(-1 * olrin, 3600)
