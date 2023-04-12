@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import logging
+import numpy as np
+
 try:
     import cartopy.crs as ccrs
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
-
     LON_FORMAT = LongitudeFormatter(zero_direction_label=True, degree_symbol="")
     LAT_FORMAT = LatitudeFormatter(degree_symbol="")
-except:
+except ModuleNotFoundError:
     print("Cartopy is not installed. Figure will not be produced.")
 
-import logging
 import matplotlib.pyplot as plt
 from matplotlib.patches import ConnectionPatch
 from matplotlib.ticker import MultipleLocator
-import numpy as np
 from typing import Optional
 
 from entities import CloudBand

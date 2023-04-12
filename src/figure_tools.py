@@ -4,20 +4,20 @@
 A set of function to create different figures
 """
 
+import logging
+import numpy as np
+
 try:
     import cartopy.crs as ccrs
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
-
     LON_FORMAT = LongitudeFormatter(zero_direction_label=True, degree_symbol="")
     LAT_FORMAT = LatitudeFormatter(degree_symbol="")
-except:
+except ModuleNotFoundError:
     print("Cartopy is not installed. Figure will not be produced.")
 
-import logging
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import matplotlib as mpl
-import numpy as np
 from skimage import measure
 
 from utilities import wrapTo180
