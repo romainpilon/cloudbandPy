@@ -25,7 +25,6 @@ DIRCODE = "/users/rpilon/codes/unil/CloudBandDetection/"
 sys.path.insert(0, DIRCODE + "/src/")
 from figure_tools import set_fontsize
 from io_utilities import load_ymlfile, load_data_from_saved_var_files
-from time_utilities import create_list_of_dates
 
 # FIXME
 # from CloudBandDetection.src.figure_tools import set_fontsize
@@ -47,7 +46,7 @@ def get_cmap(n, name="viridis"):
     return mpl.cm.get_cmap(name, n)
 
 
-def plot_mean_ncloudband_per_year(yearlymsum):
+def plot_mean_ncloudband_per_year(yearlymsum: pd.DataFrame):
     set_figures_props()
     # mean number of cloud band per month on the whole ERA5 period
     cmap = get_cmap(len(yearlymsum.keys()[:-1]))
@@ -67,7 +66,7 @@ def plot_mean_ncloudband_per_year(yearlymsum):
     return fig
 
 
-def plot_mean_ncloudband_per_month(monthlysum):
+def plot_mean_ncloudband_per_month(monthlysum: pd.DataFrame):
     set_figures_props()
     # mean number of cloud band per month on the whole ERA5 period
     nyears = 61.0
@@ -86,7 +85,7 @@ def plot_mean_ncloudband_per_month(monthlysum):
     return fig
 
 
-def plot_mean_ncloud_band_days_permonth(monthlymean, monthlymax):
+def plot_mean_ncloud_band_days_permonth(monthlymean: pd.DataFrame, monthlymax: pd.DataFrame):
     set_figures_props()
     """Plot the mean number of cloud per day per month"""
     set_fontsize(size=13)
@@ -148,8 +147,9 @@ def plot_mean_ncloud_band_days_permonth(monthlymean, monthlymax):
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[-1] or DIRCODE + "config/config_analysis.yml"
+    config_file = sys.argv[-1] or f"{DIRCODE}/config/config_analysis.yml"
     config = load_ymlfile(config_file, isconfigfile=True)
+    
     config["domain"] = "southPacific"
     list_of_cloud_bandsSP = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
     config["domain"] = "northPacific"
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     config["domain"] = "southAfricaIO"
     list_of_cloud_bandsAIO = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
 
-    pdlist_dates = pd.to_datetime(create_list_of_dates(config))
+    pdlist_dates = pd.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq="D")
     # -> number of cloud bands for each day
     nb_cb_each_dateSP = [len(el) for el in list_of_cloud_bandsSP]
     nb_cb_each_dateNP = [len(el) for el in list_of_cloud_bandsNP]
