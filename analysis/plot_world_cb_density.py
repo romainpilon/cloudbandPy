@@ -11,24 +11,22 @@ to obtain a world climatology of cloud band density
 3. Plot a map
 """
 
-
-import numpy as np
 import sys
-from matplotlib.cm import get_cmap
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+from matplotlib.cm import get_cmap
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import numpy as np
 
 try:
     import cartopy.crs as ccrs
     import cartopy.util as cutil
-except:
+except ImportError:
     print("Cartopy is not installed. Figure will not be produced.")
 
 try:
-    # better looking colorblind-proof colormaps
-    import colorcet as cc
-except:
+    import colorcet as cc  # better looking colorblind-proof colormaps
+except ImportError:
     pass
 
 DIRCODE = "/users/rpilon/codes/unil/CloudBandDetection/"
@@ -55,7 +53,8 @@ def overlay_array_on_map_withlatitudes(
 ) -> np.ndarray:
     if initial:
         final_array = np.zeros((len(lats), len(lons)))
-    final_array[np.intersect1d(lats, lats2overlay, return_indices=True)[1][::-1], :] = array2overlay
+    index = np.intersect1d(lats, lats2overlay, return_indices=True)[1]
+    final_array[index[::-1], :] = array2overlay
     return final_array
 
 
@@ -101,19 +100,19 @@ def create_worldmap_density(density, lons, lats):
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[-1] or DIRCODE + "config/config_analysis_world_cb_density.yml"
+    config_file = sys.argv[-1] or f"{DIRCODE}/config/config_analysis_world_cb_density.yml"
     config = load_ymlfile(config_file, isconfigfile=True)
 
     # 1.1 Get latitude and longitude of 0.5 degree ERA5 data
     lats_globe = np.load(DIRCODE + "data/lats_globe0.5_ERA5.npy")
     lons_globe = np.load(DIRCODE + "data/lons_globe0.5_ERA5.npy")
-    
+
     # 1.2 Get longitudes and latitudes of southern hemisphere
-    lon_ids = [id for id, el in enumerate(lons_globe) if el <= config["lon_east"] if el >= config["lon_west"]]
+    lon_ids = np.where(np.logical_and(lons_globe <= config["lon_east"], lons_globe >= config["lon_west"]))[0]
     lonssh = lons_globe[lon_ids]
-    lat_ids = [id for id, el in enumerate(lats_globe) if el <= config["lat_north"] if el >= config["lat_south"]]
+    lat_ids = np.where(np.logical_and(lats_globe <= config["lat_north"], lats_globe >= config["lat_south"]))[0]
     latssh = lats_globe[lat_ids]
-    
+
     # 1.3 Load cloud bands from the southern hemisphere (default config is for southern hemisphere)
     listofdates = create_list_of_dates(config)
     list_of_cloud_bandssh = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
@@ -128,13 +127,13 @@ if __name__ == "__main__":
     config["lat_north"] = 50
     config["lat_south"] = 10
     list_of_cloud_bandsnh = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
-    
+
     # 2.2 Get longitudes and latitudes of northern hemisphere domain
-    lon_ids = [id for id, el in enumerate(lons_globe) if el <= config["lon_east"] if el >= config["lon_west"]]
+    lon_ids = np.where(np.logical_and(lons_globe <= config["lon_east"], lons_globe >= config["lon_west"]))[0]
     lonsnh = lons_globe[lon_ids]
-    lat_ids = [id for id, el in enumerate(lats_globe) if el <= config["lat_north"] if el >= config["lat_south"]]
+    lat_ids = np.where(np.logical_and(lats_globe <= config["lat_north"], lats_globe >= config["lat_south"]))[0]
     latsnh = lats_globe[lat_ids]
-    
+
     # 2.3 Compute density for the northern hemisphere
     ntot_cbnh, densitynh = compute_density(
         lats=latsnh, lons=lonsnh, dates=listofdates, list_of_cloud_bands=list_of_cloud_bandsnh

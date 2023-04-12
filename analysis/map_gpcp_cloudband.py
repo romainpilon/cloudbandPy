@@ -20,17 +20,15 @@ try:
     import cartopy.crs as ccrs
     import cartopy.util as cutil
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
-
-    LON_FORMAT = LongitudeFormatter(zero_direction_label=True, degree_symbol="")
-    LAT_FORMAT = LatitudeFormatter(degree_symbol="")
-except:
+except ImportError:
+    ccrs, cutil, LongitudeFormatter, LatitudeFormatter = None, None, None, None
     print("Cartopy is not installed. Figure will not be produced.")
 
 try:
     # better looking colorblind-proof colormaps
     import colorcet
-except:
-    pass
+except ImportError:
+    colorcet = None
 
 
 dir_package = "/users/rpilon/codes/unil/CloudBandDetection/"
@@ -44,6 +42,8 @@ from tracking import compute_density
 def plot_gpcg_precip_cloudbandday(lons, lats, lonscb, latscb, config):
     # Global map of OLR year mean
     set_fontsize(17)
+    LON_FORMAT = LongitudeFormatter(zero_direction_label=True, degree_symbol="")
+    LAT_FORMAT = LatitudeFormatter(degree_symbol="")
     try:
         # better looking colorblind-proof colormap from colorcet
         cmap = get_cmap("cet_CET_CBL2_r")
