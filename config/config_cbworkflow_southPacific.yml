@@ -4,8 +4,8 @@
 run_inheritance_tracking: True
 
 # Start/end date and time
-startdate: "19790101.00"
-enddate: "20211231.00"
+startdate: "20160115.00"
+enddate: "20160131.00"
 
 # Domain
 domain: "southPacific"
@@ -53,7 +53,8 @@ load_saved_files: False
 dir_figures: './cloud_band_figures'
 
 fig_detection_process: False
-fig_time_evolution_object: False
+# By default the following line allows to plot snapshots of cloud bands
+fig_time_evolution_object: True
 fig_time_evolution_var_cloudband: False
 fig_overlay_cloudband: False
 fig_show_bbox_around_blobs: False

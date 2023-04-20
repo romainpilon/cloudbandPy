@@ -31,6 +31,16 @@ def blob_detection(
     logger = logging.getLogger("blob_tools.blob_detection")
     thresh_variable = parameters["OLR_THRESHOLD"]
     cloud_band_area_threshold = float(parameters["CLOUD_BAND_AREA_THRESHOLD"])
+    # Threshold value
+    # We add the possibility to use histogram based methods. By default, it will use the specific threshold.      
+    if str(parameters["thresholding_method"]).lower() == "yen":
+        thresh_value = threshold_yen(input_variable)
+        logger.warning(f"Use Yen thresholding method. Threshold:{thresh_value}")
+    elif str(parameters["thresholding_method"]).lower() == "otsu":
+        thresh_value = threshold_otsu(input_variable)
+        logger.warning(f"Use Otsu thresholding method. Threshold:{thresh_value}")
+    else:
+        thresh_value = parameters["OLR_THRESHOLD"]
     # Sanitize input. make sure all values < 0 are all set to 0
     if not np.all((input_variable >= 0)):
         logger.warning("Some Missing Values in the Input")
