@@ -301,8 +301,8 @@ def plot_time_evolution_blobs(
     """
     logger = logging.getLogger("figure_tools.plot_time_evolution_blobs")
     if len(blobs) != len(listofdates):
-        logger.info(f"This figure is made to show 16 days. Length of your data is {len(blobs)}")
-        return
+        logger.warning("")
+        raise ValueError(f"This figure is made to show 16 days. Length of your data is {len(blobs)}")
     else:
         nrows = 4; ncols = 4
         lat_north, lat_south = round(lats[0]), round(lats[-1])
