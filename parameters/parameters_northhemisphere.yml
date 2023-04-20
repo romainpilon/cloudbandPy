@@ -2,6 +2,10 @@
 hemisphere: "north"
 
 OLR_THRESHOLD: 210
+# Thresholding method. By default, it will use OLR_THRESHOLD as threshold.
+# You may choose "yen" or "otsu" (automatic histogram-based thresholding methods) for testing purpose.
+thresholding_method: 0
+
 CLOUD_BAND_AREA_THRESHOLD: 10e5 # km2
 # Cloud band must cross the tropical line
 TOP_LATITUDE: 27

@@ -8,6 +8,7 @@ import logging
 import numpy as np
 from scipy import ndimage as ndi
 from skimage import measure, morphology
+from skimage.filters import threshold_otsu, threshold_yen
 
 from entities import CloudBand
 from time_utilities import convert_date2num
@@ -21,15 +22,13 @@ def blob_detection(
     This function uses morphological labelling, ie blob detection, to detect cloud bands
     Input:
         - input_variable: variable which will be processed and from which blobs of clouds will be detected
-        - thresh_variable: threshold value we will use to detect cloud bands
+        - thresh_value: threshold value we will use to detect cloud bands
         - cloud_band_area_threshold: en m2
     Output:
         - detected_blobs: a map of blobs
-    Side note: One could use the Yen global thresholding method, with
-        thresh_variable = threshold_yen(input_variable)
+    Side note: One could use the Yen (or Ostu) global thresholding method, change in parameters. For testing purpose, note for research.
     """
     logger = logging.getLogger("blob_tools.blob_detection")
-    thresh_variable = parameters["OLR_THRESHOLD"]
     cloud_band_area_threshold = float(parameters["CLOUD_BAND_AREA_THRESHOLD"])
     # Threshold value
     # We add the possibility to use histogram based methods. By default, it will use the specific threshold.      
@@ -45,9 +44,8 @@ def blob_detection(
     if not np.all((input_variable >= 0)):
         logger.warning("Some Missing Values in the Input")
         input_variable[input_variable < 0] = 0
-    #
     # Binarize the data and fill holes
-    fill_binarize_data = ndi.binary_fill_holes(input_variable < thresh_variable)
+    fill_binarize_data = ndi.binary_fill_holes(input_variable < thresh_value)
     # We apply a morphological dilation: adds pixels to the boundaries of each objects
     dilation = morphology.dilation(fill_binarize_data)
     # -- Connected Components Labelling

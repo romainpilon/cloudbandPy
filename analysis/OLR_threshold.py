@@ -3,9 +3,11 @@
 
 """
 This script creates:
-- an histogram of OLR values with 2 optimal values according to global optimal thresholding
+- an histogram of OLR values with 2 optimal values according to global optimal thresholding (got)
 - a world map of OLR
-This can help to understand the chosen parameters
+This can help to understand the chosen parameters.
+
+It uses data that have been previoulsy saved using the main script. It does not use netcdf files.
 """
 
 

@@ -59,4 +59,4 @@ fig_time_evolution_var_cloudband: False
 fig_overlay_cloudband: False
 fig_show_bbox_around_blobs: False
 fig_inheritance_tracking: False
-fig_density: True
+fig_density: False

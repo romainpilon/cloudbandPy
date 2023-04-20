@@ -15,12 +15,15 @@ except ModuleNotFoundError:
 import matplotlib.pyplot as plt
 from matplotlib.patches import ConnectionPatch
 from matplotlib.ticker import MultipleLocator
-from typing import Optional
+from typing import Optional, Set
 
 from entities import CloudBand
 from figure_tools import set_fontsize
 from blob_tools import compute_blob_area
 from utilities import wrapTo180
+
+
+logger = logging.getLogger(__name__)
 
 
 def findCloud(dates, name) -> Optional[CloudBand]:
@@ -38,19 +41,18 @@ def tracking(list_of_cloud_bands, resolution, overlapfactor) -> list:
     through intersection -> they can have a parent or more,
     Then each parents are compared with cloud abnds of the day whether they intersect
     --> allows a two-way parenting identification"""
-    logger = logging.getLogger("tracking.tracking")
     logger.info("Inheritance tracking in progress")
     list_tracked_cloudband = list_of_cloud_bands.copy()  # copy to avoid side effects
     for idx, clouds in enumerate(list_of_cloud_bands):
         if len(clouds):
             for icloud in clouds:
                 # look for parents, starting on second date
-                parents = set()
+                parents: Set[str] = set()
                 if idx > 0 and len(list_tracked_cloudband[idx - 1]):
                     for parent_cloud in list_of_cloud_bands[idx - 1]:
-                        if isIn(parent_cloud, icloud, resolution, overlapfactor):
+                        if is_in(parent_cloud, icloud, resolution, overlapfactor):
                             parents.add(parent_cloud.id_)
-                        if isIn(icloud, parent_cloud, resolution, overlapfactor):
+                        if is_in(icloud, parent_cloud, resolution, overlapfactor):
                             parents.add(parent_cloud.id_)
                 icloud.parents = parents
                 # print("cb_id_", icloud.id_, "cloud.parents", icloud.parents)
@@ -58,7 +60,7 @@ def tracking(list_of_cloud_bands, resolution, overlapfactor) -> list:
     return list_tracked_cloudband
 
 
-def isIn(orig: "CloudBand", other: "CloudBand", resolution: np.ndarray, overlapfactor: float = 0.4) -> bool:
+def is_in(orig: "CloudBand", other: "CloudBand", resolution: np.ndarray, overlapfactor: float = 0.4) -> bool:
     """Check whether the cloud band is in (overlayed over) another cloud band"""
     intersection = orig.cloud_band_array * other.cloud_band_array
     area_intersection = compute_blob_area(intersection, 1, resolution)

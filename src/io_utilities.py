@@ -60,7 +60,7 @@ def openncfile(filename: str, config) -> tuple:
     olr_convert2wm2 = config["olr_convert2wm2"]
     if os.path.isdir(filedirectory) and os.path.isfile(filedirectory + "/" + filename):
         ds = nc.Dataset(filedirectory + "/" + filename, "r")
-        variable = ds.variables[varname]
+        variable = ds.variables[varname][...]
         # Convert into W.m^-2 if needed
         if olr_convert2wm2:
             variable = convert_olr_in_wm2(variable)
@@ -218,19 +218,19 @@ def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, conf
     logger.info("Computation of daily average done")
     return np.stack(daily_variable)
 
-
+# FIXME check date of import, if not full year, get the right file
 def load_npydata(filename: str = None, config: dict = None, varname: str = None) -> np.ndarray:
     if not filename and not config:
         raise ValueError("Either filename or config must be provided.")
 
     dirpath = config.get("saved_dirpath", ".")
     if filename:
-        filepath = os.path.join(dirpath, f"{filename}.npy")
+        filepath = os.path.join(dirpath, f"{filename}")
     else:
         startdate = config.get("startdate", "")
         enddate = config.get("enddate", "")
         domain = config.get("domain", "")
-        filepath = os.path.join(dirpath, f"{varname}{startdate}-{enddate}-{domain}.npy")
+        filepath = os.path.join(dirpath, f"{varname}{startdate}-{enddate}-{domain}")
 
     if not os.path.isfile(filepath):
         raise FileNotFoundError(f"{filepath} not found.")
@@ -275,7 +275,7 @@ def load_data_from_saved_var_files(config: dict, varname: str):
     """
     logger = logging.getLogger("io_utilities.load_data_from_saved_var_files")
     if config["load_saved_files"]:
-        print(
+        logger.info(
             f"Load data from: {config['datetime_startdate'].strftime('%Y%m%d.%H')} to {config['datetime_enddate'].strftime('%Y%m%d.%H')}"
         )
         if varname == "list_of_cloud_bands":
@@ -288,6 +288,7 @@ def load_data_from_saved_var_files(config: dict, varname: str):
                 datalist.extend(var4oneyear)
         elif varname == "daily_variable":
             tmplist = []
+            # TODO change from one year to specific period
             for iyear in range(int(config["datetime_startdate"].year), int(config["datetime_enddate"].year) + 1):
                 filename = f"{varname}{iyear}0101.00-{iyear}1231.00-{config['domain']}.npy"
                 if config["select_djfm"]:
@@ -300,7 +301,7 @@ def load_data_from_saved_var_files(config: dict, varname: str):
             id_start = np.argwhere(listofdates == config["datetime_startdate"])[0][0]
             id_end = np.argwhere(listofdates == config["datetime_enddate"])[0][0]
             interval = int(24.0 / config["period_detection"])
-            # FIXME make it possible 4 any period of detection, saved dependant
+            # TODO make it possible 4 any period of detection, saved dependant
             datalist = datalist[id_start : id_end + interval, :, :]
         return datalist
     else:

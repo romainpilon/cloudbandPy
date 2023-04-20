@@ -43,13 +43,12 @@ if not config["load_saved_files"]:
 else:
     # Load from saved files
     logger.info(f"Use data saved in {config['saved_dirpath']}")
+    # FIXME move lon/lat into config['saved_dirpath']
     lons_in, lats_in = np.load("/users/rpilon/codes/unil/CloudBandDetection/data/lons_globe0.5_ERA5.npy"), np.load("/users/rpilon/codes/unil/CloudBandDetection//data/lats_globe0.5_ERA5.npy")
     _, lons = subset_longitudes(lons_in, config["lon_west"], config["lon_east"])
     _, lats = subset_latitudes(lats_in, config["lat_north"], config["lat_south"])
     variable2process = load_data_from_saved_var_files(config, varname="daily_variable")
     # FIXME variable2process do not have the same length as listof dates, subset time do not work
-    # TODO precip era5 and cloud bands
-    # TODO notebook
     # update cloubandPy
 
 resolution = compute_resolution(lons, lats)
