@@ -1,6 +1,6 @@
 # Configuration file for analysis scripts
 domain: "southPacific"
-startdate: "19600101.00"
+startdate: "19590101.00"
 enddate: "20211231.00"
 
 # directory where files are saved

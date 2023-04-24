@@ -32,7 +32,7 @@ from io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 
 def set_figures_props():
-    set_fontsize(size=16)
+    set_fontsize(size=20)
     mpl.rcParams["axes.spines.left"] = True
     mpl.rcParams["axes.spines.right"] = False
     mpl.rcParams["axes.spines.top"] = False
@@ -71,7 +71,7 @@ def plot_mean_ncloudband_per_month(monthlysum: pd.DataFrame):
     # mean number of cloud band per month on the whole ERA5 period
     nyears = 61.0
     cmap = get_cmap(len(monthlysum.keys()[:-1]))
-    fig, ax = plt.subplots(1, 1, figsize=(7, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(9.8, 7))
     for i, name in enumerate(monthlysum.keys()[:-1]):  # no index
         ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c=cmap(i), label=name)
     #
