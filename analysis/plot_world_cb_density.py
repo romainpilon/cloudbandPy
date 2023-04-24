@@ -60,7 +60,7 @@ def overlay_array_on_map_withlatitudes(
 
 def create_worldmap_density(density, lons, lats):
     # 4. Create figure
-    set_fontsize()
+    set_fontsize(size=16)
     try:
         # better looking colorblind-proof colormap
         cmap = get_cmap("cet_CET_CBL2_r")
@@ -156,5 +156,5 @@ if __name__ == "__main__":
     cworld_density, clons = cutil.add_cyclic_point(world_density, lons_globe)
     fig = create_worldmap_density(cworld_density, clons, lats_globe)
     fig.show()
-    figname = f"{config['dir_figures']}/number_days_cloud_band_per_year{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_world_cont7days.png"
-    fig.savefig(figname, dpi=250, bbox_inches="tight")
+figname = f"{config['dir_figures']}/number_days_cloud_band_per_year{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_world_cont7days.png"
+fig.savefig(figname, dpi=250, bbox_inches="tight")
