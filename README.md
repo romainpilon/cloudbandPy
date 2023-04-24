@@ -55,3 +55,7 @@ to discuss what you would like to change.
 Please make sure to update tests as appropriate.
 # CloudBandDetection
 # cloudbanddetection texting version
+
+
+This package contains modified ERA5 data
+Copernicus Climate Change Service (C3S) (2023): ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). 10.24381/cds.adbb2d47

@@ -43,7 +43,7 @@ parameters_file: '/users/rpilon/codes/unil/CloudBandDetection/parameters/paramet
 saved_dirpath: './cloud_band_files' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of te variable
-save_listcloudbands: False # list containing lists of cloud band (1 list per day)
+save_listcloudbands: True # list containing lists of cloud band (1 list per day)
 
 # To load files saved in saved_dirpath and not load files containing raw data
 load_saved_files: False

@@ -1,7 +1,7 @@
 # Configuration file for analysis scripts
 # Here we aim at plotting a world map overlayed by cloud bands of each hemisphere 
 domain: "southernhemisphere"
-startdate: "19600101.00"
+startdate: "19590101.00"
 enddate: "20211231.00"
 
 # directory where files are saved

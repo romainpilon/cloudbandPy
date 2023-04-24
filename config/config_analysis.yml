@@ -1,7 +1,7 @@
 # Configuration file for analysis scripts
 domain: "southPacific"
-startdate: "19830101.00"
-enddate: "20191231.00"
+startdate: "19600101.00"
+enddate: "20211231.00"
 
 # directory where files are saved
 saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files/'
