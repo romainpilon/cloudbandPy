@@ -17,7 +17,7 @@ setup(
     description="A Python package for atmospheric cloud bands detection.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    # url="https://github.com/pypa/sampleproject",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -27,6 +27,7 @@ setup(
     ],
     install_requires=required,
     python_requires=">=3.8",
+    package_dir={"": "src"}
 )
 
 if __name__ == "__main__":
