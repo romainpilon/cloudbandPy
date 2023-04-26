@@ -18,8 +18,8 @@ def convert_num2date(time_in) -> Any:
 
 def create_list_of_dates(config: dict) -> pandas.date_range:
     """
-    Returns:
-    - a list of days ranging from the start date to the end date
+    Create a list of days ranging from the start date to the end date
+    Handles "day is out of range for month" problem
     """
     logger = logging.getLogger("time_utilities.create_list_of_dates")
     # tranform dates from config file in datetime format and create a pandas date range
@@ -36,18 +36,32 @@ def create_list_of_dates(config: dict) -> pandas.date_range:
     else:
         logger.error("Detection period must be 24h, 12h, 6h, 3h or 1h!")
         sys.exit(1)
-    return pandas.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq)
+    try:
+        return pandas.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq)
+    except ValueError:
+        logger.warning("ValueError: day is out of range for month")
+        config["datetime_enddate"] = dt.datetime.strptime(config["datetime_enddate"], "%Y-%m-%d %H:%M:%S") - dt.timedelta(days=1)
+        return create_list_of_dates(config)
 
 
 def add_startend_datetime2config(config: dict) -> tuple:
     """
     Transforms start/end times from the config file in 'yyyymmdd.hh' format to datetime format
     Update config file
+    Handles "day is out of range for month" problem
     """
+    logger = logging.getLogger("time_utilities.add_startend_datetime2config")
     timeformat_in_datetime = "%Y%m%d.%H"
-    config.update(
-        {
-            "datetime_startdate": dt.datetime.strptime(config["startdate"], timeformat_in_datetime),
-            "datetime_enddate": dt.datetime.strptime(config["enddate"], timeformat_in_datetime),
-        }
-    )
+    try:
+        config.update(
+            {
+                "datetime_startdate": dt.datetime.strptime(config["startdate"], timeformat_in_datetime),
+                "datetime_enddate": dt.datetime.strptime(config["enddate"], timeformat_in_datetime),
+            }
+        )
+    except ValueError as e:
+        if "day is out of range for month" in str(e):
+            logger.error("Error: Invalid date range. February has only 28 or 29 days.")
+        else:
+            logger.error(f"Error: {e}")
+        sys.exit(1)

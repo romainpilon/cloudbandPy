@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task 1
 #SBATCH --mem 16G
 #SBATCH --time 03:00:00
-#SBATCH --array=0-61
+#SBATCH --array=0-62
 
 module purge
 module load gcc python
@@ -35,7 +35,7 @@ for domain in "${domains[@]}"; do
     configname=config_cbworkflow_"${domain}"
     configpath="${srcdir}"/config/"${configname}".yml
 
-    years=({1959..1960..1})
+    years=({1959..2021..1})
 
     for iyear in "${years[@]}"; do
         outfil="${tmpdir_config}"/"${configname}"_"${iyear}".yml

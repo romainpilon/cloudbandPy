@@ -300,11 +300,11 @@ def plot_time_evolution_blobs(
     -> blobs can be labelled_blobs, labelled_candidates or cloud_bands_over_time
     """
     logger = logging.getLogger("figure_tools.plot_time_evolution_blobs")
-    if len(blobs) != len(listofdates):
+    nrows = 4; ncols = 4
+    if len(listofdates)  != nrows*ncols:
         logger.warning("")
         raise ValueError(f"This figure is made to show 16 days. Length of your data is {len(blobs)}")
     else:
-        nrows = 4; ncols = 4
         lat_north, lat_south = round(lats[0]), round(lats[-1])
         daystart = f"{listofdates[0].day}-{listofdates[0].strftime('%m')}-{listofdates[0].year}"
         dayend = f"{listofdates[-1].day}-{listofdates[-1].strftime('%m')}-{listofdates[-1].year}"

@@ -4,8 +4,8 @@
 run_inheritance_tracking: True
 
 # Start/end date and time
-startdate: "20160101.00"
-enddate: "20161231.00"
+startdate: "20210113.00"
+enddate: "20210128.00"
 
 # Domain
 domain: "southernhemisphere"
@@ -13,7 +13,7 @@ domain: "southernhemisphere"
 hemisphere: "south"
 lon_west: 0
 lon_east: 360
-lat_north: -10
+lat_north: 5
 lat_south: -50
 
 # Input files directory
@@ -53,7 +53,7 @@ load_saved_files: False
 dir_figures: './cloud_band_figures'
 
 fig_detection_process: False
-fig_time_evolution_object: False
+fig_time_evolution_object: True
 fig_time_evolution_var_cloudband: False
 fig_overlay_cloudband: False
 fig_show_bbox_around_blobs: False

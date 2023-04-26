@@ -205,7 +205,6 @@ def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, conf
     daily_tmp_variable = []
     listofdates = create_list_of_dates(config)
     for itime in listofdates:
-        print("itime", itime)
         # Select indexes to make daily average
         id_start, id_end = get_ids_start_end4timecrop(itime, config, inputtime=inputtime)
         # Daily mean of the input variable (OLR). Works as smoothing
