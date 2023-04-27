@@ -88,7 +88,7 @@ def load_dataset(config: dict) -> tuple:
         - lons, lats, array of longitudes and latitudes of the domain
     """
     logger = logging.getLogger("io_utilities.load_dataset")
-    logger.info("Loading dataset")
+    logger.info(f"Loading dataset from {config['clouddata_path']}")
     # Read configurations
     varname_infilename = config["varname_infilename"]
     #
@@ -123,6 +123,13 @@ def load_dataset(config: dict) -> tuple:
     # Create daily mean of the input variable?
     if config["qd_var"]:
         variable4cb = make_daily_average(variable4cb, timein, config)
+        # Save daily variable (and latitudes and longitudes)
+        if config["save_dailyvar"]:
+            logger.info("Saving daily variable")
+            npy_save_dailyvar(config, variable4cb)
+            # Save longitudes and latitudes for further use with the saved daily variable
+            np.save(f"{config['saved_dirpath']}/lons_{config['domain']}.npy", np.asarray(lons))
+            np.save(f"{config['saved_dirpath']}/lats_{config['domain']}.npy", np.asarray(lats))
     logger.info("Dataset loaded")
     return variable4cb, lons, lats
 
@@ -212,10 +219,6 @@ def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, conf
         daily_tmp_variable.append(variable4cb)
     # Stack list of daily averages
     daily_variable = np.stack(daily_tmp_variable)
-    # Save daily variable
-    if config["save_dailyvar"]:
-        logger.info("Saving daily variable")
-        npy_save_dailyvar(config, daily_variable)
     logger.info("Computation of daily average done")
     return daily_variable
 
