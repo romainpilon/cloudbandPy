@@ -21,3 +21,4 @@ __pycache__/
 
 # package
 cloudbanddetection.egg-info/
+venv
