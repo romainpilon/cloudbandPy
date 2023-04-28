@@ -10,7 +10,7 @@ from scipy import ndimage as ndi
 from skimage import measure, morphology
 from skimage.filters import threshold_otsu, threshold_yen
 
-from entities import CloudBand
+from cloudband import CloudBand
 from time_utilities import convert_date2num
 from utilities import wrapTo360
 
