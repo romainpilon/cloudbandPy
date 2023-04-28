@@ -61,7 +61,7 @@ def plot_mean_ncloudband_per_year(yearlymsum: pd.DataFrame):
     ax.set_xlabel("Years")
     ax.set_ylabel("Number of cloud bands per years")
     plt.legend(
-        bbox_to_anchor=(0, 1.02, .6, 0.2), loc="lower center", mode="expand", borderaxespad=0, ncol=2, framealpha=0.5
+        bbox_to_anchor=(0, 1.02, .6, 0.2), borderaxespad=0, ncol=2, columnspacing=3.5, framealpha=0.5
     )
     return fig
 
@@ -205,13 +205,13 @@ if __name__ == "__main__":
     yearlymsum.index = pd.to_datetime(yearlymsum.index, format="%Y")
     yearlymean.index = pd.to_datetime(range(int(config['datetime_startdate'].year), int(config['datetime_enddate'].year)+1), format="%Y")
 
-    fig1 = plot_mean_ncloudband_per_year(yearlymsum)
-    fig1.show()
-    fig1.savefig(
-        f"{config['dir_figures']}/n_cb_per_year_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_4basins.png",
-        dpi=200,
-        bbox_inches="tight",
-    )
+fig1 = plot_mean_ncloudband_per_year(yearlymsum)
+fig1.show()
+fig1.savefig(
+    f"{config['dir_figures']}/n_cb_per_year_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_4basins.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 
     fig2 = plot_mean_ncloudband_per_month(monthlysum)
     fig2.show()
