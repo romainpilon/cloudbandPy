@@ -1,4 +1,4 @@
-# Alpha version of CloudbandPy
+# CloudbandPy
 
 cloudbandPy is a Python package for detecting and tracking atmospheric cloud bands.
 
@@ -47,9 +47,11 @@ Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-# cloudbandpy
-# cloudbanddetection texting version
 
+# cloudbandpy
+Todo
+# cloudbanddetection texting version
+todo
 
 # Notes
 This package contains modified ERA5 data
