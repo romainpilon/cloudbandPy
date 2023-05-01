@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# FIXME remove this
 # Runscript to show OLR distribution and thresholding 
 
 # code directory

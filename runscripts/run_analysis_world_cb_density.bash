@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# FIXME remove this
 # Runscript to create a world climatology of cloud band density
 
 # code directory

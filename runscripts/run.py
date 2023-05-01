@@ -2,22 +2,23 @@
 # coding: utf-8
 """
 This script allows to run the detection algorithm.
-Run CloudBandDetection/runscripts/run_.. .py for appropriate use.
+Run CloudBandDetection/runscripts/run.py config----.py
 """
 
 import argparse
 import logging
 import sys, os
 
-from blob_tools import detection_workflow
-from io_utilities import (
+from cloudbanddetection.load_driver import run_load_data
+
+from cloudbanddetection.blob_tools import detection_workflow
+from cloudbanddetection.io_utilities import (
     logging_setup,
     load_ymlfile,
     pickle_save_cloudbands,
 )
-from load_driver import run_load_data
-from tracking import tracking, compute_density, plot_tracking_on_map
-from figure_tools import *
+from cloudbanddetection.tracking import tracking, compute_density, plot_tracking_on_map
+from cloudbanddetection.figure_tools import *
 
 logging_setup()
 logger = logging.getLogger(__name__)
