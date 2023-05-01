@@ -2,7 +2,7 @@
 # coding: utf-8
 """
 Script to create histogram showing the percentage of the cloud band number distribution
-Run: python CloudBandDetection/analysis/plot_distribution_number_of_cb.py config_analysis.yml
+Run: python cloudbandpy/analysis/plot_distribution_number_of_cb.py config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
@@ -10,14 +10,14 @@ import matplotlib as mpl
 import numpy as np
 import sys
 
-DIRCODE = "/users/rpilon/codes/unil/CloudBandDetection/"
+DIRCODE = "/users/rpilon/codes/unil/cloudbandPy/"
 sys.path.insert(0, DIRCODE + "/src/")
 from figure_tools import set_fontsize
 from io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 # FIXME
-# from CloudBandDetection.src.figure_tools import set_fontsize
-# from CloudBandDetection.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
+# from cloudbandpy.src.figure_tools import set_fontsize
+# from cloudbandpy.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 
 def plot_histogram_number_of_cloudbands(number_of_cb_per_day1, number_of_cb_per_day2):

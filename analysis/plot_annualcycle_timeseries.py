@@ -9,7 +9,7 @@ and plot the number of cloud band per year,
 for the South Pacific, North Pacific, South Atlantic and Indian Ocean domains,
 as defined by the configuration files
 
-Run: python CloudBandDetection/analysis/plot_annualcycle_timeseries.py config_analysis.yml
+Run: python cloudbandpy/analysis/plot_annualcycle_timeseries.py config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
@@ -21,14 +21,14 @@ from matplotlib.ticker import MultipleLocator
 import pandas as pd
 import sys
 
-DIRCODE = "/users/rpilon/codes/unil/CloudBandDetection/"
+DIRCODE = "/users/rpilon/codes/unil/cloudbandPy/"
 sys.path.insert(0, DIRCODE + "/src/cloudbanddetection")
 from figure_tools import set_fontsize
 from io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 # FIXME
-# from CloudBandDetection.src.figure_tools import set_fontsize
-# from CloudBandDetection.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
+# from cloudbandpy.src.figure_tools import set_fontsize
+# from cloudbandpy.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 
 def set_figures_props():

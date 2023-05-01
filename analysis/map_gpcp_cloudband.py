@@ -31,7 +31,7 @@ except ImportError:
     colorcet = None
 
 
-dir_package = "/users/rpilon/codes/unil/CloudBandDetection/"
+dir_package = "/users/rpilon/codes/unil/cloudbandPy/"
 sys.path.insert(0, dir_package + "src/")
 from figure_tools import set_fontsize
 from io_utilities import load_ymlfile, load_data_from_saved_var_files, subset_latitudes, subset_longitudes

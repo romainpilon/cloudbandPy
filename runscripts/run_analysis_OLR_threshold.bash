@@ -7,7 +7,7 @@ srcdir=/users/rpilon/codes/unil/
 # choose and modify you config file accoding to your need and setup
 configfilename=config_analysis.yml
 # config file directory
-configpath="${srcdir}"/CloudBandDetection/config/"${configfilename}"
+configpath="${srcdir}"/cloudbandPy/config/"${configfilename}"
 
 # run the detection
-python "${srcdir}"/CloudBandDetection/analysis/OLR_threshold.py "${configpath}"
+python "${srcdir}"/cloudbandPy/analysis/OLR_threshold.py "${configpath}"

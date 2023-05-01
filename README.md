@@ -18,7 +18,7 @@ Go to the directory:
 cd cloudbandPy
 ```
 
-Use environment.yml file to create a Conda virtual environment:
+<!-- Use environment.yml file to create a Conda virtual environment:
 ```bash
 conda env create --file=environment.yml
 ```
@@ -26,7 +26,7 @@ conda env create --file=environment.yml
 After setting up the Conda virtual environment, activate it with:
 ```bash
 conda activate cloudbandpy
-```
+``` -->
 
 Then install the package with:
 ```bash
@@ -34,18 +34,12 @@ pip install -e .
 ```
 
 ## Usage
-Run cloudbandPy after activating the conda enviromnent.
+Change configuration file as needed. Eg. directories where the input data are located, where the figures will be saved, where the output files will be saved, then in the cloudbandPy directory.
 
 ```python
-python ./src/main.py ./config/config_cbworkflow_southPacific.yml
+python ./src/cloudbandpy/run.py ./config/config_cbworkflow_southPacific.yml
 ```
-
-Example run scripts are included runscripts. These run scripts act as a drop-in replacement for src/main.py config/config.yml, and get executed in the same way, using bash:
-
-```bash
-bash ./runscripts/run_cloudbanddetection.bash
-```
-
+<!-- TODO change for the runscript directory  -->
 
 ## Contributing
 
@@ -53,9 +47,10 @@ Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-# CloudBandDetection
+# cloudbandpy
 # cloudbanddetection texting version
 
 
+# Notes
 This package contains modified ERA5 data
 Copernicus Climate Change Service (C3S) (2023): ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). 10.24381/cds.adbb2d47

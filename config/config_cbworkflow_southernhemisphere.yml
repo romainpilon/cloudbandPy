@@ -38,7 +38,7 @@ ycoord_name: 'latitude'
 select_djfm: False
 
 # Parameters file for cloud band detection
-parameters_file: '/users/rpilon/codes/unil/CloudBandDetection/parameters/parameters_southhemisphere.yml'
+parameters_file: '/users/rpilon/codes/unil/cloudbandPy/parameters/parameters_southhemisphere.yml'
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
 saved_dirpath: './cloud_band_files' # directory where files will be saved

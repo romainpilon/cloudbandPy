@@ -2,7 +2,7 @@
 # coding: utf-8
 """
 This script allows to run the detection algorithm.
-Run CloudBandDetection/runscripts/run_.. .py for appropriate use.
+Run cloudbandpy/runscripts/run_.. .py for appropriate use.
 """
 
 import argparse

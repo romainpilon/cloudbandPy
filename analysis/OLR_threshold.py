@@ -18,14 +18,14 @@ from skimage.filters import threshold_otsu, threshold_yen
 from skimage import exposure
 import os, sys
 
-DIRCODE = "/users/rpilon/codes/unil/CloudBandDetection/"
+DIRCODE = "/users/rpilon/codes/unil/cloudbandPy/"
 sys.path.insert(0, DIRCODE + "/src/")
 from figure_tools import set_fontsize
 from io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 # FIXME
-# from CloudBandDetection.src.figure_tools import set_fontsize
-# from CloudBandDetection.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
+# from cloudbandpy.src.figure_tools import set_fontsize
+# from cloudbandpy.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 
 def plot_histogram(variable4analyis):

@@ -18,7 +18,7 @@ cd "${DIR}" || return
 
 # Set paths
 # for code source
-srcdir=/users/rpilon/codes/unil/CloudBandDetection # TODO
+srcdir=/users/rpilon/codes/unil/cloudbandPy # TODO
 # for temporary config files. we create one config file per year to save memory (instead of loading 43 years of reanalysis)
 tmpdir_config=/users/rpilon/tmp # TODO
 [[ ! -d "${tmpdir_config}" ]] && mkdir "${tmpdir_config}"

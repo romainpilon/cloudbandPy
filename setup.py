@@ -1,4 +1,4 @@
-"""Setup script for installing CloudBandDetection"""
+"""Setup script for installing cloudbandPy"""
 
 from setuptools import setup, find_packages
 
