@@ -105,7 +105,7 @@ def candidates2class(labelled_candidates, date, resolution, lons, lats):
         if wrapTo360(np.nanmin(cb_lon)) == 0.0 and wrapTo360(np.nanmax(cb_lon)) > 250.0:
             connected_longitudes = True
         cloud = CloudBand(
-            icloudband,
+            cloud_band_array=icloudband,
             date_number=cb_num_date,
             area=cb_area,
             lats=cb_lat,
