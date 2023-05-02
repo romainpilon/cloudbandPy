@@ -9,16 +9,16 @@ import argparse
 import logging
 import sys, os
 
-from cloudbanddetection.load_driver import run_load_data
+from cloudbandpy.load_driver import run_load_data
 
-from cloudbanddetection.blob_tools import detection_workflow
-from cloudbanddetection.io_utilities import (
+from cloudbandpy.blob_tools import detection_workflow
+from cloudbandpy.io_utilities import (
     logging_setup,
     load_ymlfile,
     pickle_save_cloudbands,
 )
-from cloudbanddetection.tracking import tracking, compute_density, plot_tracking_on_map
-from cloudbanddetection.figure_tools import *
+from cloudbandpy.tracking import tracking, compute_density, plot_tracking_on_map
+from cloudbandpy.figure_tools import *
 
 logging_setup()
 logger = logging.getLogger(__name__)

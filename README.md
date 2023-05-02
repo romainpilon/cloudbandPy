@@ -50,7 +50,7 @@ Please make sure to update tests as appropriate.
 
 # cloudbandpy
 Todo
-# cloudbanddetection texting version
+# cloudbandpy texting version
 todo
 
 # Notes

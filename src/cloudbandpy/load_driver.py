@@ -4,14 +4,14 @@
 import logging
 import numpy as np
 
-from io_utilities import (
+from .io_utilities import (
     logging_setup,
     load_dataset,
     load_data_from_saved_var_files,
     load_ymlfile,
 )
-from time_utilities import create_list_of_dates
-from utilities import compute_resolution
+from .time_utilities import create_list_of_dates
+from .utilities import compute_resolution
 
 logging_setup()
 

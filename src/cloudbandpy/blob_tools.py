@@ -10,9 +10,9 @@ from scipy import ndimage as ndi
 from skimage import measure, morphology
 from skimage.filters import threshold_otsu, threshold_yen
 
-from cloudband import CloudBand
-from time_utilities import convert_date2num
-from utilities import wrapTo360
+from .cloudband import CloudBand
+from .time_utilities import convert_date2num
+from .utilities import wrapTo360
 
 
 def blob_detection(

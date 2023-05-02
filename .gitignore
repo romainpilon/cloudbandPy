@@ -20,6 +20,12 @@ __pycache__/
 *$py.class
 
 # package
-cloudbanddetection.egg-info/
+src/cloudbandpy.egg-info.egg-info
+src/cloudbandpy.egg-info/top_level.txt
+src/cloudbandpy.egg-info/PKG-INFO
+src/cloudbandpy.egg-info/SOURCES.txt
+src/cloudbandpy.egg-info/dependency_links.txt
+
 venv
 .venv
+.gitignore

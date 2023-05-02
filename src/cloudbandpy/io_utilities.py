@@ -14,8 +14,8 @@ import os
 import pickle
 import yaml
 
-from utilities import convert_olr_in_wm2, wrapTo180
-from time_utilities import add_startend_datetime2config, create_list_of_dates
+from .utilities import convert_olr_in_wm2, wrapTo180
+from .time_utilities import add_startend_datetime2config, create_list_of_dates
 
 
 def logging_setup():

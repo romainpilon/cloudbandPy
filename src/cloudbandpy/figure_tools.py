@@ -20,7 +20,7 @@ from matplotlib.ticker import MultipleLocator
 import matplotlib as mpl
 from skimage import measure
 
-from utilities import wrapTo180
+from .utilities import wrapTo180
 
 
 def set_fontsize(size: int = 11):

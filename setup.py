@@ -10,7 +10,7 @@ with open("requirements.txt") as f:
 
 
 setup(
-    name="cloudbanddetection",
+    name="cloudbandpy",
     version="1.0.0",
     author="Romain Pilon",
     author_email="romain.pilon@gmail.com",

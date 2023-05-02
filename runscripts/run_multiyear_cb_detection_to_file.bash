@@ -47,6 +47,6 @@ configpath="${tmpdir_config}"/"${configfilename}"
 
 echo "${srcdir}" "${configpath}"
 
-python "${srcdir}"/src/cloudbanddetection/run.py "${configpath}"
+python "${srcdir}"/src/cloudbandpy/run.py "${configpath}"
 
 # done

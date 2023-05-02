@@ -17,10 +17,10 @@ from matplotlib.patches import ConnectionPatch
 from matplotlib.ticker import MultipleLocator
 from typing import Optional, Set
 
-from cloudband import CloudBand
-from figure_tools import set_fontsize
-from blob_tools import compute_blob_area
-from utilities import wrapTo180
+from .cloudband import CloudBand
+from .figure_tools import set_fontsize
+from .blob_tools import compute_blob_area
+from .utilities import wrapTo180
 
 
 logger = logging.getLogger(__name__)
