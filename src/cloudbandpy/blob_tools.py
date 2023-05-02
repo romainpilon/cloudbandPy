@@ -12,7 +12,7 @@ from skimage.filters import threshold_otsu, threshold_yen
 
 from .cloudband import CloudBand
 from .time_utilities import convert_date2num
-from .utilities import wrapTo360
+from .misc import wrapTo360
 
 
 def blob_detection(

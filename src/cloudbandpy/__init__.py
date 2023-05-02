@@ -1,4 +1,4 @@
-from . import utilities
+from . import misc
 from . import time_utilities
 from . import io_utilities
 from . import blob_tools

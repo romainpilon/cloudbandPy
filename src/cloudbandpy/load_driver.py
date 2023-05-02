@@ -11,7 +11,7 @@ from .io_utilities import (
     load_ymlfile,
 )
 from .time_utilities import create_list_of_dates
-from .utilities import compute_resolution
+from .misc import compute_resolution
 
 logging_setup()
 
