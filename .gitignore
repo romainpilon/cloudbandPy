@@ -15,7 +15,10 @@
 .DS_Store
 
 # Python
+<<<<<<< HEAD
 # Python
+=======
+>>>>>>> 5e056ff69eb1481995e8567792051603e64f47a8
 *.py[cod]
 *$py.class
 *.so
