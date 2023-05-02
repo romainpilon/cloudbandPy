@@ -15,18 +15,30 @@
 .DS_Store
 
 # Python
-__pycache__/
 *.py[cod]
 *$py.class
+*.so
+*.egg
+*.egg-info
+__pycache__
+venv/
+env/
+build/
+dist/
+.ipynb_checkpoints/
+*.ipynb~ 
+
+# Jupyter Notebook
+.ipynb_checkpoints
+/nb-*
+/.ipynb_checkpoints/*
+~$*
+*.nbconvert.ipynb
+*.html
+*.py
 
 # package
 cloudbandpy.egg-info.egg-info
-src/cloudbandpy.egg-info.egg-info
-src/cloudbandpy.egg-info/top_level.txt
-src/cloudbandpy.egg-info/PKG-INFO
-src/cloudbandpy.egg-info/SOURCES.txt
-src/cloudbandpy.egg-info/dependency_links.txt
-src/cloudbandpy.egg-info/requires.txt
 
 venv
 .venv
