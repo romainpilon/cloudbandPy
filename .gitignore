@@ -20,6 +20,7 @@ __pycache__/
 *$py.class
 
 # package
+cloudbandpy.egg-info.egg-info
 src/cloudbandpy.egg-info.egg-info
 src/cloudbandpy.egg-info/top_level.txt
 src/cloudbandpy.egg-info/PKG-INFO
