@@ -14,6 +14,7 @@ import os
 import pickle
 import yaml
 
+from .cloudband import CloudBand
 from .misc import convert_olr_in_wm2, wrapTo180
 from .time_utilities import add_startend_datetime2config, create_list_of_dates
 
