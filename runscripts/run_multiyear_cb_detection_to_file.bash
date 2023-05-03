@@ -24,8 +24,9 @@ tmpdir_config=/users/rpilon/tmp # TODO
 [[ ! -d "${tmpdir_config}" ]] && mkdir "${tmpdir_config}"
 
 # Select the domain(s)
-declare -a domains=("southPacific" "northPacific" "southAfricaIO" "southAtlantic")
-# domain="northernhemisphere"
+# declare -a domains=("southPacific" "northPacific" "southAfricaIO" "southAtlantic")
+declare -a domains=("southernhemisphere" "northernhemisphere")
+
 for domain in "${domains[@]}"; do
     echo "${domain}"
 
