@@ -247,30 +247,6 @@ def load_npydata(filename: str = None, config: dict = None, varname: str = None)
     return var2load
 
 
-def load_pickledata(filename: str = None, config: dict = None, varname: str = None) -> np.ndarray:
-    if not filename and not config:
-        raise ValueError("Either filename or config must be provided.")
-
-    dirpath = config.get("saved_dirpath", ".")
-    if filename:
-        filepath = os.path.join(dirpath, f"{filename}")
-    else:
-        startdate = config.get("startdate", "")
-        enddate = config.get("enddate", "")
-        domain = config.get("domain", "")
-        filepath = os.path.join(dirpath, f"{varname}{startdate}-{enddate}-{domain}")
-
-    try:
-        with open(filepath, "rb") as f:
-            var2load = pickle.load(f, fix_imports=True)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"{filepath} not found.")
-    except Exception as e:
-        raise e
-
-    return var2load
-
-
 def load_data_from_saved_var_files(config: dict, varname: str):
     """
     Load 1-year files and put the data into a list
@@ -284,11 +260,13 @@ def load_data_from_saved_var_files(config: dict, varname: str):
         )
         if varname == "list_of_cloud_bands":
             datalist = []
+            extension_fout = ".bin"
             for iyear in range(int(config["datetime_startdate"].year), int(config["datetime_enddate"].year) + 1):
-                filename = f"{varname}{iyear}{config['datetime_startdate'].strftime('%m%d.%H')}-{iyear}{config['datetime_enddate'].strftime('%m%d.%H')}-{config['domain']}.pickle"
+                filename = f"{varname}{iyear}{config['datetime_startdate'].strftime('%m%d.%H')}-{iyear}{config['datetime_enddate'].strftime('%m%d.%H')}-{config['domain']}{extension_fout}"
                 if config["select_djfm"]:
-                    filename = filename.rsplit(".", 1)[0] + "_djfm" + ".pickle"
-                var4oneyear = load_pickledata(filename=filename, config=config, varname=varname)
+                    filename = filename.rsplit(".", 1)[0] + "_djfm" + extension_fout
+                # Load pickle list of CloudBands
+                var4oneyear = load_list(filename=f"{config['saved_dirpath']}/{filename}")
                 datalist.extend(var4oneyear)
         elif varname == "daily_variable":
             tmplist = []
@@ -358,5 +336,11 @@ def load_list(filename):
 
     Returns: list with data
     """
-    with open(filename, "rb") as f:
-        return [[CloudBand.fromdict(e) for e in j] for j in pickle.load(f)]
+    try:
+        with open(filename, "rb") as f:
+            return [[CloudBand.fromdict(e) for e in j] for j in pickle.load(f)]
+    except FileNotFoundError:
+        raise FileNotFoundError(f"{filename} not found.")
+    except Exception as e:
+        raise e
+    
