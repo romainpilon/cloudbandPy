@@ -3,10 +3,12 @@
 
 """
 This script allows to create a map of the spatial distribution of precipitation 
-average over 1983 to 2019 overlaid by cloud band days per year, over the South Pacific.
-The work performed was done by using data from the Global Precipitation Climatology Project and from ERA5.
+averaged over 1983 to 2019 overlaid by cloud band days per year, over the South Pacific.
 
-Before running this script, ensure that you have extracted the cloud bands and have thecloud band files ready.
+Before running this script, ensure that you have extracted the cloud bands and have the cloud band files ready.
+Edit config/config_analysis.yml as needed (eg: data location)
+
+Acknowledgement: the work performed was done by using data from the Global Precipitation Climatology Project and from ERA5.
 """
 
 import matplotlib.pyplot as plt
@@ -14,7 +16,7 @@ import matplotlib.ticker as mticker
 from matplotlib.cm import get_cmap
 from netCDF4 import Dataset
 import numpy as np
-import sys
+import os
 
 try:
     import cartopy.crs as ccrs
@@ -31,12 +33,11 @@ except ImportError:
     colorcet = None
 
 
-dir_package = "/users/rpilon/codes/unil/cloudbandPy/"
-sys.path.insert(0, dir_package + "src/")
-from figure_tools import set_fontsize
-from io_utilities import load_ymlfile, load_data_from_saved_var_files, subset_latitudes, subset_longitudes
-from time_utilities import create_list_of_dates
-from tracking import compute_density
+from cloudbandpy.figure_tools import set_fontsize
+from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files, subset_latitudes, subset_longitudes
+from cloudbandpy.misc import parse_arguments
+from cloudbandpy.time_utilities import create_list_of_dates
+from cloudbandpy.tracking import compute_density
 
 
 def plot_gpcg_precip_cloudbandday(lons, lats, lonscb, latscb, config):
@@ -90,24 +91,33 @@ def plot_gpcg_precip_cloudbandday(lons, lats, lonscb, latscb, config):
 
 
 if __name__ == "__main__":
+    args = parse_arguments()
+    config_file = args.config_file
+    config = load_ymlfile(config_file, isconfigfile=True)
+    
     # Load GPCP precipitation (copyright 2023 GPCP)
-    ncfile = Dataset(dir_package + "data/GPCPMON_L3_1983_2019_timemean.nc4", "r")
+    data_localpath = config["data_localpath"]
+    filename = "GPCPMON_L3_1983_2019_timemean.nc4"
+    file_path = os.path.join(data_localpath, "data", filename)
+    ncfile = Dataset(file_path, "r")
     lons = ncfile.variables["lon"][:]
     lats = ncfile.variables["lat"][:]
     precip = ncfile.variables["sat_gauge_precip"][0]  # mm/day
-    # add cyclic point
+    
+    # Add cyclic point
     cdata, clons = cutil.add_cyclic_point(precip, lons)
-    config_file = dir_package + "config/config_analysis.yml"
-    config = load_ymlfile(config_file, isconfigfile=True)
+
     # Make sure that the period for the cloud bands cover the same period as GPCP
     config["startdate"] = "19830101.00"
     config["enddate"] = "20191231.00"
+    
     # Get latitude and longitude of 0.5 degree ERA5 data
-    lats_globe = np.load(dir_package + "data/lats_globe0.5_ERA5.npy")
-    lons_globe = np.load(dir_package + "data/lons_globe0.5_ERA5.npy")
+    lats_globe = np.load(os.path.join(data_localpath, "lats_globe0.5_ERA5.npy"))
+    lons_globe = np.load(os.path.join(data_localpath, "lons_globe0.5_ERA5.npy"))
     # Get longitudes and latitudes of South Pacific domain
     _, lonsSP = subset_longitudes(lons_globe, config["lon_west"], config["lon_east"])
     _, latsSP = subset_latitudes(lats_globe, config["lat_north"], config["lat_south"])
+    
     # Load cloud bands from the South Pacific
     listofdates = create_list_of_dates(config)
     list_of_cloud_bands = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
@@ -117,7 +127,7 @@ if __name__ == "__main__":
     fig = plot_gpcg_precip_cloudbandday(clons, lats, lonsSP, latsSP, config)
     fig.show()
     fig.savefig(
-        f"./map_precip_GPCP_avg_{config['datetime_startdate'].year}-{config['datetime_enddate'].year}_cloudbands7days.png",
+        f"{config['dir_figures']}/map_precip_GPCP_avg_{config['datetime_startdate'].year}-{config['datetime_enddate'].year}_cloudbands7days.png",
         dpi=200,
         bbox_inches="tight",
     )

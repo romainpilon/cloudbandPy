@@ -24,29 +24,27 @@ tmpdir_config=/users/rpilon/tmp # TODO
 [[ ! -d "${tmpdir_config}" ]] && mkdir "${tmpdir_config}"
 
 # Select the domain(s)
-# declare -a domains=("southPacific" "northPacific" "southAfricaIO" "southAtlantic")
-domain="northernhemisphere"
-# Iterate the string array using for loop
-# for domain in "${domains[@]}"; do
-echo "${domain}"
-# domain=southPacific
+declare -a domains=("southPacific" "northPacific" "southAfricaIO" "southAtlantic")
+# domain="northernhemisphere"
+for domain in "${domains[@]}"; do
+    echo "${domain}"
 
-configname=config_cbworkflow_"${domain}"
-configpath="${srcdir}"/config/"${configname}".yml
+    configname=config_cbworkflow_"${domain}"
+    configpath="${srcdir}"/config/"${configname}".yml
 
-years=({1959..2021..1})
+    years=({1959..2021..1})
 
-echo "${years["${SLURM_ARRAY_TASK_ID}"]}"
-outfil="${tmpdir_config}"/"${configname}"_"${years["${SLURM_ARRAY_TASK_ID}"]}".yml
-old=2016 # check the start/end year
-new="${years["${SLURM_ARRAY_TASK_ID}"]}"
-sed "s|${old}|${new}|g" "${configpath}" >"${outfil}"
+    echo "${years["${SLURM_ARRAY_TASK_ID}"]}"
+    outfil="${tmpdir_config}"/"${configname}"_"${years["${SLURM_ARRAY_TASK_ID}"]}".yml
+    old=2016 # check the start/end year
+    new="${years["${SLURM_ARRAY_TASK_ID}"]}"
+    sed "s|${old}|${new}|g" "${configpath}" >"${outfil}"
 
-configfilename="${configname}"_"${years["${SLURM_ARRAY_TASK_ID}"]}".yml
-configpath="${tmpdir_config}"/"${configfilename}"
+    configfilename="${configname}"_"${years["${SLURM_ARRAY_TASK_ID}"]}".yml
+    configpath="${tmpdir_config}"/"${configfilename}"
 
-echo "${srcdir}" "${configpath}"
+    echo "${srcdir}" "${configpath}"
 
-python "${srcdir}"/src/cloudbandpy/run.py "${configpath}"
+    python "${srcdir}"/runscripts/run.py "${configpath}"
 
-# done
+done
