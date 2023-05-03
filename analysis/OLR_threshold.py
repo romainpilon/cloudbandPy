@@ -20,7 +20,7 @@ import os
 
 from cloudbandpy.figure_tools import set_fontsize
 from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files
-
+from cloudbandpy.misc import parse_arguments
 
 def plot_histogram(variable4analyis):
     # Histogram of OLR with optimal global threshold
@@ -49,8 +49,9 @@ def plot_histogram(variable4analyis):
 
 
 if __name__ == "__main__":
-    # Load anaysis config file
-    config_file = "../config/config_analysis.yml"
+    # Load analysis config file: use default config/config_analysis.yml
+    args = parse_arguments()
+    config_file = args.config_file
     config = load_ymlfile(config_file, isconfigfile=True)
     # Load daily OLR previously saved
     daily_variable = load_data_from_saved_var_files(config, varname="daily_variable")
