@@ -9,7 +9,7 @@ and plot the number of cloud band per year,
 for the South Pacific, North Pacific, South Atlantic and Indian Ocean domains,
 as defined by the configuration files
 
-Run: python cloudbandpy/analysis/plot_annualcycle_timeseries.py config_analysis.yml
+Run: python cloudbandpy/runscripts/plot_annualcycle_timeseries.py config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
@@ -19,16 +19,12 @@ import matplotlib.patheffects as mpe
 from matplotlib.ticker import MultipleLocator
 
 import pandas as pd
-import sys
 
-DIRCODE = "/users/rpilon/codes/unil/cloudbandPy/"
-sys.path.insert(0, DIRCODE + "/src/cloudbandpy")
-from figure_tools import set_fontsize
-from io_utilities import load_ymlfile, load_data_from_saved_var_files
 
-# FIXME
-# from cloudbandpy.src.figure_tools import set_fontsize
-# from cloudbandpy.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
+from cloudbandpy.figure_tools import set_fontsize
+from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files
+from cloudbandpy.misc import parse_arguments
+from cloudbandpy.time_utilities import add_startend_datetime2config
 
 
 def set_figures_props():
@@ -147,26 +143,32 @@ def plot_mean_ncloud_band_days_permonth(monthlymean: pd.DataFrame, monthlymax: p
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[-1] or f"{DIRCODE}/config/config_analysis.yml"
+    args = parse_arguments()
+    config_file = args.config_file
     config = load_ymlfile(config_file, isconfigfile=True)
+    # Make sure the dates are covering the whole period
+    config_copy = config.copy()
+    config_copy["startdate"] = "19590101.00"
+    config_copy["enddate"] = "20211231.00"
+    add_startend_datetime2config(config_copy)
     
-    config["domain"] = "southPacific"
-    list_of_cloud_bandsSP = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
-    config["domain"] = "northPacific"
-    list_of_cloud_bandsNP = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
-    config["domain"] = "southAtlantic"
-    list_of_cloud_bandsSA = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
-    config["domain"] = "southAfricaIO"
-    list_of_cloud_bandsAIO = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
+    config_copy["domain"] = "southPacific"
+    list_of_cloud_bandsSP = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
+    config_copy["domain"] = "northPacific"
+    list_of_cloud_bandsNP = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
+    config_copy["domain"] = "southAtlantic"
+    list_of_cloud_bandsSA = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
+    config_copy["domain"] = "southAfricaIO"
+    list_of_cloud_bandsAIO = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
 
-    pdlist_dates = pd.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq="D")
+    pdlist_dates = pd.date_range(start=config_copy["datetime_startdate"], end=config_copy["datetime_enddate"], freq="D")
     # -> number of cloud bands for each day
     nb_cb_each_dateSP = [len(el) for el in list_of_cloud_bandsSP]
     nb_cb_each_dateNP = [len(el) for el in list_of_cloud_bandsNP]
     nb_cb_each_dateSA = [len(el) for el in list_of_cloud_bandsSA]
     nb_cb_each_dateAIO = [len(el) for el in list_of_cloud_bandsAIO]
 
-        # -> to pandas for easier data handling
+    # -> to pandas for easier data handling
     list4pandas = [
         [a, b, c, d, e]
         for a, b, c, d, e in zip(
@@ -203,20 +205,20 @@ if __name__ == "__main__":
 
     yearlymax.index = pd.to_datetime(yearlymax.index, format="%Y")
     yearlymsum.index = pd.to_datetime(yearlymsum.index, format="%Y")
-    yearlymean.index = pd.to_datetime(range(int(config['datetime_startdate'].year), int(config['datetime_enddate'].year)+1), format="%Y")
+    yearlymean.index = pd.to_datetime(range(int(config_copy['datetime_startdate'].year), int(config_copy['datetime_enddate'].year)+1), format="%Y")
 
-fig1 = plot_mean_ncloudband_per_year(yearlymsum)
-fig1.show()
-fig1.savefig(
-    f"{config['dir_figures']}/n_cb_per_year_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_4basins.png",
-    dpi=300,
-    bbox_inches="tight",
-)
+    fig1 = plot_mean_ncloudband_per_year(yearlymsum)
+    fig1.show()
+    fig1.savefig(
+        f"{config_copy['dir_figures']}/n_cb_per_year_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
+        dpi=300,
+        bbox_inches="tight",
+    )
 
     fig2 = plot_mean_ncloudband_per_month(monthlysum)
     fig2.show()
     fig2.savefig(
-        f"{config['dir_figures']}/annualcycle_n_cb_per_month_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_4basins.png",
+        f"{config_copy['dir_figures']}/annualcycle_n_cb_per_month_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
         dpi=200,
         bbox_inches="tight",
     )
@@ -224,7 +226,7 @@ fig1.savefig(
     fig3 = plot_mean_ncloud_band_days_permonth(monthlymean, monthlymax)
     fig3.show()
     fig3.savefig(
-        f"{config['dir_figures']}/annualcycle_mean_cloudband_days_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_4basins.png",
+        f"{config_copy['dir_figures']}/annualcycle_mean_cloudband_days_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
         dpi=200,
         bbox_inches="tight",
     )
