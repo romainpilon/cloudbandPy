@@ -143,6 +143,7 @@ def plot_mean_ncloud_band_days_permonth(monthlymean: pd.DataFrame, monthlymax: p
 
 
 if __name__ == "__main__":
+    # Load analysis configuration file
     args = parse_arguments()
     config_file = args.config_file
     config = load_ymlfile(config_file, isconfigfile=True)

@@ -113,7 +113,7 @@ if __name__ == "__main__":
     config_copy["enddate"] = "20191231.00"
     add_startend_datetime2config(config_copy)
 
-    # Get latitude and longitude of 0.5 degree ERA5 data
+    # Get latitude and longitude of 0.5 degree ERA5 data for the cloud bands
     lats_globe = np.load(os.path.join(data_localpath, "lats_globe0.5_ERA5.npy"))
     lons_globe = np.load(os.path.join(data_localpath, "lons_globe0.5_ERA5.npy"))
     # Get longitudes and latitudes of South Pacific domain

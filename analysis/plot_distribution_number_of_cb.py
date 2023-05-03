@@ -10,14 +10,11 @@ import matplotlib as mpl
 import numpy as np
 import sys
 
-DIRCODE = "/users/rpilon/codes/unil/cloudbandPy/"
-sys.path.insert(0, DIRCODE + "/src/")
-from figure_tools import set_fontsize
-from io_utilities import load_ymlfile, load_data_from_saved_var_files
 
-# FIXME
-# from cloudbandpy.src.figure_tools import set_fontsize
-# from cloudbandpy.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
+from cloudbandpy.figure_tools import set_fontsize
+from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files
+from cloudbandpy.misc import parse_arguments
+from cloudbandpy.time_utilities import add_startend_datetime2config
 
 
 def plot_histogram_number_of_cloudbands(number_of_cb_per_day1, number_of_cb_per_day2):
@@ -53,8 +50,16 @@ def plot_histogram_number_of_cloudbands(number_of_cb_per_day1, number_of_cb_per_
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[-1]
+    # Load analysis configuration file
+    args = parse_arguments()
+    config_file = args.config_file
     config = load_ymlfile(config_file, isconfigfile=True)
+    # Make sure the dates are covering the whole period
+    config_copy = config.copy()
+    config_copy["startdate"] = "19590101.00"
+    config_copy["enddate"] = "20211231.00"
+    add_startend_datetime2config(config_copy)
+    # Load cloud bands
     list_of_cloud_bandsSP = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
     config["select_djfm"] = True
     list_of_cloud_bandsSP_djfm = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
