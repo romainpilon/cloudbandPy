@@ -2,8 +2,10 @@
 # coding: utf-8
 
 """
+Runscript to show OLR distribution and thresholding 
+
 This script creates:
-- an histogram of OLR values with 2 optimal values according to global optimal thresholding (got)
+- an histogram of OLR values with 2 optimal values according to global optimal thresholding
 - a world map of OLR
 This can help to understand the chosen parameters.
 
