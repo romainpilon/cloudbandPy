@@ -326,16 +326,36 @@ def pickle_save_cloudbands(config, list_of_cloud_bands):
     logger = logging.getLogger("io_utilities.pickle_save_cloudbands")
     outpath = config["saved_dirpath"]
     os.makedirs(outpath, exist_ok=True)
+    extension_fout = ".bin"
     if config["select_djfm"]:
-        f = open(
-            f"{outpath}/list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}_djfm.pickle",
-            "wb",
-        )
+        fout = f"{outpath}/list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}_djfm{extension_fout}",
     else:
-        f = open(
-            f"{outpath}/list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}.pickle", "wb"
-        )
-    pickle.dump(obj=list_of_cloud_bands, file=f, fix_imports=True)
-    f.close()
+        fout = f"{outpath}/list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}{extension_fout}"
+    dump_list(list_of_cloud_bands, fout)
     logger.info("Cloud bands saved")
     return
+
+
+
+def dump_list(l, filename):
+    """
+    Dumps a list of lists of instances of `CloudBand` into a pickle file,
+    after converting the instances to dictionaries, so that `CloudBand`
+    is not pickled
+
+    Input:
+        filename: Output file name (str)
+    """
+    with open(filename, "wb") as f:
+        pickle.dump([[c.todict() for c in j] for j in l], f)
+
+
+def load_list(filename):
+    """
+    Loads a pickle file constructed with `dump_list` into a list of
+    lists of instances of `CloudBand`
+
+    Returns: list with data
+    """
+    with open(filename, "rb") as f:
+        return [[CloudBand.fromdict(e) for e in j] for j in pickle.load(f)]

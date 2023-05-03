@@ -89,7 +89,7 @@ def blob_detection(
 
 def candidates2class(labelled_candidates, date, resolution, lons, lats):
     """
-    Transform cloud band candidates into a cloud band class
+    Transform cloud band candidates into a CloudBand class
     """
     logger = logging.getLogger("blob_tools.candidates2class")
     list_candidates = []

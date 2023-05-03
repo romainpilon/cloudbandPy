@@ -2,12 +2,13 @@ import datetime as dt
 import logging
 import pandas
 import netCDF4 as nc
+import numpy as np
 from typing import Any
 import sys
 
 
 def convert_date2num(time_in) -> Any:
-    return nc.date2num(time_in, "hours since 1900-01-01 00:00:00.0", calendar="gregorian")
+    return nc.date2num(time_in, "hours since 1900-01-01 00:00:00.0", calendar="gregorian").astype(np.int32)
 
 
 def convert_num2date(time_in) -> Any:
