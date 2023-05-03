@@ -36,7 +36,7 @@ except ImportError:
 from cloudbandpy.figure_tools import set_fontsize
 from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files, subset_latitudes, subset_longitudes
 from cloudbandpy.misc import parse_arguments
-from cloudbandpy.time_utilities import create_list_of_dates
+from cloudbandpy.time_utilities import create_list_of_dates, add_startend_datetime2config
 from cloudbandpy.tracking import compute_density
 
 
@@ -108,26 +108,29 @@ if __name__ == "__main__":
     cdata, clons = cutil.add_cyclic_point(precip, lons)
 
     # Make sure that the period for the cloud bands cover the same period as GPCP
-    config["startdate"] = "19830101.00"
-    config["enddate"] = "20191231.00"
-    
+    config_copy = config.copy()
+    config_copy["startdate"] = "19830101.00"
+    config_copy["enddate"] = "20191231.00"
+    add_startend_datetime2config(config_copy)
+
     # Get latitude and longitude of 0.5 degree ERA5 data
     lats_globe = np.load(os.path.join(data_localpath, "lats_globe0.5_ERA5.npy"))
     lons_globe = np.load(os.path.join(data_localpath, "lons_globe0.5_ERA5.npy"))
     # Get longitudes and latitudes of South Pacific domain
-    _, lonsSP = subset_longitudes(lons_globe, config["lon_west"], config["lon_east"])
-    _, latsSP = subset_latitudes(lats_globe, config["lat_north"], config["lat_south"])
+    _, lonsSP = subset_longitudes(lons_globe, config_copy["lon_west"], config_copy["lon_east"])
+    _, latsSP = subset_latitudes(lats_globe, config_copy["lat_north"], config_copy["lat_south"])
     
     # Load cloud bands from the South Pacific
-    listofdates = create_list_of_dates(config)
-    list_of_cloud_bands = load_data_from_saved_var_files(config, varname="list_of_cloud_bands")
+    listofdates = create_list_of_dates(config_copy)
+    print(listofdates)
+    list_of_cloud_bands = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
     # Compute density for the southern hemisphere
     _, density = compute_density(lats=latsSP, lons=lonsSP, dates=listofdates, list_of_cloud_bands=list_of_cloud_bands)
     # Create figure and save it
-    fig = plot_gpcg_precip_cloudbandday(clons, lats, lonsSP, latsSP, config)
+    fig = plot_gpcg_precip_cloudbandday(clons, lats, lonsSP, latsSP, config_copy)
     fig.show()
     fig.savefig(
-        f"{config['dir_figures']}/map_precip_GPCP_avg_{config['datetime_startdate'].year}-{config['datetime_enddate'].year}_cloudbands7days.png",
+        f"{config_copy['dir_figures']}/map_precip_GPCP_avg_{config_copy['datetime_startdate'].year}-{config_copy['datetime_enddate'].year}_cloudbands7days.png",
         dpi=200,
         bbox_inches="tight",
     )
