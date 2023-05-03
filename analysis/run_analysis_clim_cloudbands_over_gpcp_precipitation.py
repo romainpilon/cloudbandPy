@@ -98,7 +98,7 @@ if __name__ == "__main__":
     # Load GPCP precipitation (copyright 2023 GPCP)
     data_localpath = config["data_localpath"]
     filename = "GPCPMON_L3_1983_2019_timemean.nc4"
-    file_path = os.path.join(data_localpath, "data", filename)
+    file_path = os.path.join(data_localpath, filename)
     ncfile = Dataset(file_path, "r")
     lons = ncfile.variables["lon"][:]
     lats = ncfile.variables["lat"][:]
