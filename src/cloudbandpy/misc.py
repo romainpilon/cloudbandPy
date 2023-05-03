@@ -4,9 +4,16 @@
 Functions to manipulate longitudes, compute resolution and convert OLR values in W.m2
 """
 
+import argparse
 import metpy.calc as mpcalc
 import numpy as np
 from typing import Any
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Run the cloud band detection algorithm")
+    parser.add_argument("config_file", type=str, help="Path to configuration file")
+    return parser.parse_args()
 
 
 def compute_resolution(lons: np.ndarray, lats: np.ndarray) -> np.ndarray:

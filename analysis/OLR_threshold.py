@@ -16,16 +16,10 @@ from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 import numpy as np
 from skimage.filters import threshold_otsu, threshold_yen
 from skimage import exposure
-import os, sys
+import os
 
-DIRCODE = "/users/rpilon/codes/unil/cloudbandPy/"
-sys.path.insert(0, DIRCODE + "/src/")
-from figure_tools import set_fontsize
-from io_utilities import load_ymlfile, load_data_from_saved_var_files
-
-# FIXME
-# from cloudbandpy.src.figure_tools import set_fontsize
-# from cloudbandpy.src.io_utilities import load_ymlfile, load_data_from_saved_var_files
+from cloudbandpy.figure_tools import set_fontsize
+from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files
 
 
 def plot_histogram(variable4analyis):
@@ -55,10 +49,12 @@ def plot_histogram(variable4analyis):
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[-1]
+    # Load anaysis config file
+    config_file = "../config/config_analysis.yml"
     config = load_ymlfile(config_file, isconfigfile=True)
+    # Load daily OLR previously saved
     daily_variable = load_data_from_saved_var_files(config, varname="daily_variable")
-    # plot histogram of the input variable (eg, OLR) with optimalglobal threshold
+    # Plot histogram of the input variable (eg, OLR) with optimalglobal threshold
     print("Create distribution of OLR values with global optimal threshold values")
     os.makedirs(config["dir_figures"], exist_ok=True)
     savedfigurename = f"{config['dir_figures']}/distribution_valYen_Otsu_autoThreshold_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_{config['domain']}"

@@ -5,29 +5,23 @@ This script allows to run the detection algorithm.
 Run cloudbandpy/runscripts/run.py config----.py
 """
 
-import argparse
 import logging
-import sys, os
+import os
 
 from cloudbandpy.load_driver import run_load_data
 
 from cloudbandpy.blob_tools import detection_workflow
+from cloudbandpy.figure_tools import *
 from cloudbandpy.io_utilities import (
     logging_setup,
     load_ymlfile,
     pickle_save_cloudbands,
 )
+from cloudbandpy.misc import parse_arguments
 from cloudbandpy.tracking import tracking, compute_density, plot_tracking_on_map
-from cloudbandpy.figure_tools import *
 
 logging_setup()
 logger = logging.getLogger(__name__)
-
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Run the cloud band detection algorithm")
-    parser.add_argument("config_file", type=str, help="Path to configuration file")
-    return parser.parse_args()
 
 
 def run(config: dict):
