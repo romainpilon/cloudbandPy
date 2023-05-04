@@ -5,7 +5,7 @@
 Here we aim at plotting a world map overlayed by cloud bands of each hemisphere
 to obtain a world climatology of cloud band density
 
-0. you need to have saved data first fopr both hemispheres
+0. You must have saved cloud band data first for both hemispheres
 1. Load data: list_of_cloud_bands to compute density of cb
 2. Load one year for lon, lat
 3. Plot a map
@@ -31,7 +31,7 @@ except ImportError:
 
 
 from cloudbandpy.figure_tools import set_fontsize
-from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files, subset_latitudes, subset_longitudes
+from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files
 from cloudbandpy.misc import parse_arguments
 from cloudbandpy.time_utilities import add_startend_datetime2config, create_list_of_dates
 from cloudbandpy.tracking import compute_density
@@ -106,19 +106,13 @@ if __name__ == "__main__":
     config_copy["enddate"] = "20211231.00"
     add_startend_datetime2config(config_copy)
 
-    # 1.1 Get latitude and longitude of 0.5 degree ERA5 data
-    lats_globe = np.load(os.path.join(data_localpath, "lats_globe0.5_ERA5.npy"))
-    lons_globe = np.load(os.path.join(data_localpath, "lons_globe0.5_ERA5.npy"))
+    # 1.1 Create latitudes and longitudes that match the 0.5 degree ERA5 data
+    lats_globe = np.arange(90,-90.5,-.5)
+    lons_globe = np.arange(0,360,.5)
 
-    # 1.2 Get longitudes and latitudes of southern hemisphere
-    # lon_ids = np.where(np.logical_and(lons_globe <= config_copy["lon_east"], lons_globe >= config_copy["lon_west"]))[0]
-    # lonssh = lons_globe[lon_ids]
-    # lat_ids = np.where(np.logical_and(lats_globe <= config_copy["lat_north"], lats_globe >= config_copy["lat_south"]))[
-    #     0
-    # ]
-    # latssh = lats_globe[lat_ids]
-    _, lonssh = subset_longitudes(lons_globe, config_copy["lon_west"], config_copy["lon_east"])
-    _, latssh = subset_latitudes(lats_globe, config_copy["lat_north"], config_copy["lat_south"])
+    # 1.2 Create latitudes of southern hemisphere
+    # Since we make a map of the world, longitudes stay identical
+    latssh = np.arange(config_copy["lat_north"], config_copy["lat_south"]-.5, -.5)
     
     # 1.3 Load cloud bands from the southern hemisphere (default config_copy is for southern hemisphere)
     listofdates = create_list_of_dates(config_copy)
@@ -126,7 +120,7 @@ if __name__ == "__main__":
 
     # 1.4 Compute density for the southern hemisphere
     ntot_cbsh, densitysh = compute_density(
-        lats=latssh, lons=lonssh, dates=listofdates, list_of_cloud_bands=list_of_cloud_bandssh
+        lats=latssh, lons=lons_globe, dates=listofdates, list_of_cloud_bands=list_of_cloud_bandssh
     )
 
     # 2.1 Load cloud bands and dates from the northern hemisphere
@@ -135,17 +129,12 @@ if __name__ == "__main__":
     config_copy["lat_south"] = 10
     list_of_cloud_bandsnh = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
 
-    # 2.2 Get longitudes and latitudes of northern hemisphere domain
-    lon_ids = np.where(np.logical_and(lons_globe <= config_copy["lon_east"], lons_globe >= config_copy["lon_west"]))[0]
-    lonsnh = lons_globe[lon_ids]
-    lat_ids = np.where(np.logical_and(lats_globe <= config_copy["lat_north"], lats_globe >= config_copy["lat_south"]))[
-        0
-    ]
-    latsnh = lats_globe[lat_ids]
+    # 2.2 Create latitudes of northern hemisphere
+    latsnh = np.arange(config_copy["lat_south"], config_copy["lat_north"]+.5, +.5)
 
     # 2.3 Compute density for the northern hemisphere
     ntot_cbnh, densitynh = compute_density(
-        lats=latsnh, lons=lonsnh, dates=listofdates, list_of_cloud_bands=list_of_cloud_bandsnh
+        lats=latsnh, lons=lons_globe, dates=listofdates, list_of_cloud_bands=list_of_cloud_bandsnh
     )
 
     # 3. Overlay southern hemisphere densities over an empty world map

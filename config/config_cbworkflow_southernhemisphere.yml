@@ -13,7 +13,7 @@ domain: "southernhemisphere"
 hemisphere: "south"
 lon_west: 0
 lon_east: 360
-lat_north: 5
+lat_north: -10
 lat_south: -50
 
 # Input files directory
@@ -41,7 +41,7 @@ select_djfm: False
 parameters_file: '/users/rpilon/codes/unil/cloudbandPy/parameters/parameters_southhemisphere.yml'
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
-saved_dirpath: './cloud_band_files' # directory where files will be saved
+saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files/' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of te variable
 save_listcloudbands: True # list containing lists of cloud band (1 list per day)
