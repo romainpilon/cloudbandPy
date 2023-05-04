@@ -1,4 +1,4 @@
-# Alpha version of CloudbandPy
+# CloudbandPy
 
 cloudbandPy is a Python package for detecting and tracking atmospheric cloud bands.
 
@@ -6,56 +6,67 @@ The cloudbandPy package detect tropical-extratropical cloud bands. This software
 
 This is currently the development software used for research.
 
-## Installation
-Clone cloudbandPy:
+## 1. Installation
+Clone cloudbandPy
 
 ```bash
 git clone https://github.com/romainpilon/cloudbandPy.git
 ```
 
-Go to the directory:
+Go to the directory
 ```bash
 cd cloudbandPy
 ```
 
-Use environment.yml file to create a Conda virtual environment:
-```bash
-conda env create --file=environment.yml
-```
-
-After setting up the Conda virtual environment, activate it with:
-```bash
-conda activate cloudbandpy
-```
-
-Then install the package with:
+Then install the package with
 ```bash
 pip install -e .
 ```
 
-## Usage
-Run cloudbandPy after activating the conda enviromnent.
-
-```python
-python ./src/main.py ./config/config_cbworkflow_southPacific.yml
-```
-
-Example run scripts are included runscripts. These run scripts act as a drop-in replacement for src/main.py config/config.yml, and get executed in the same way, using bash:
+Additionnaly, a conda environment.yml file is provided to create a conda virtual environment containing all librairies required. Before installing the package with pip, you may run
 
 ```bash
-bash ./runscripts/run_cloudbanddetection.bash
+conda env create --file=environment.yml
 ```
 
+Then you may activate it
+```bash
+conda activate cloudbandpy
+```
 
-## Contributing
+## 2. Input Data Requirements
+cloudbandPy works with netCDF files using netCDF4's capability to handle 3-dimension arrays of gridded latitude/longitude data. Currently, cloudbandPy  supports ERA5 data on its regular grid. Irregular grids must be regridded to a regular grid beforehand.
+
+The input data must contain at least 3 dimensions: time, latitude and longitude, in this order.
+cloudbandPy only supports detection and tracking data on 2D arrays.
+
+
+## 3. Usage
+Before you run anything, make sure that the configuration file is set up the way you want it, i.e. setting up the input data directory.
+
+To run the cloud band detection, run the following command:
+
+```python
+python ./cloudbandPy/runscripts/run.py ./cloudbandPy/config/config_cbworkflow_southPacific.yml
+```
+
+Default settings:
+- Input data are 3-hourly ERA5 OLR data with filenames written as such `top_net_thermal_radiation_yyyy.nc` where `yyyy` is the year.
+- The detection period is 24 hours.
+- Output files containing cloud bands are written in a specific directory that will be created in the current directory.
+- Figures will be saved in a specific directory that will be created in the current directory.
+
+Example run scripts are located in the `runscripts` directories.
+
+
+## 4. Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-# CloudBandDetection
-# cloudbanddetection texting version
 
 
-This package contains modified ERA5 data
+## 5. Disclaimer
+This package contains modified ERA5 data.
 Copernicus Climate Change Service (C3S) (2023): ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). 10.24381/cds.adbb2d47

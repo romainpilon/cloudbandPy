@@ -1,6 +1,6 @@
 # conda env create -f environment.yml
 # you may have to run "conda config --set channel_priority false" before
-name: cloudbandpy
+name: cloudbandPy
 channels:
   - anaconda
   - conda-forge

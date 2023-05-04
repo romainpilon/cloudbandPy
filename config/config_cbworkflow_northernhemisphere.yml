@@ -4,8 +4,8 @@
 run_inheritance_tracking: True
 
 # Start/end date and time
-startdate: "20160115.00"
-enddate: "20160130.00"
+startdate: "20160101.00"
+enddate: "20161231.00"
 
 # Domain
 domain: "northernhemisphere"
@@ -14,11 +14,12 @@ hemisphere: "north"
 lon_west: 0
 lon_east: 360
 lat_north: 50
-lat_south: -5 
+lat_south: 10
 
 # Input files directory
-clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/ERA5/netcdf/3hourly/surface_level/'
+clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
+resolution_data: 0.5 # degree
 # Data specific
 # calculate daily mean of the input variable for detection
 qd_var: True
@@ -37,10 +38,10 @@ ycoord_name: 'latitude'
 select_djfm: False
 
 # Parameters file for cloud band detection
-parameters_file: '/users/rpilon/codes/unil/CloudBandDetection/parameters/parameters_northhemisphere.yml'
+parameters_file: './cloudbandPy/parameters/parameters_northhemisphere.yml'
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
-saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files_nh/' # directory where files will be saved
+saved_dirpath: './cloud_band_files/' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of te variable
 save_listcloudbands: True # list containing lists of cloud band (1 list per day)
@@ -53,7 +54,7 @@ load_saved_files: False
 dir_figures: './cloud_band_figures'
 
 fig_detection_process: False
-fig_time_evolution_object: True
+fig_time_evolution_object: False
 fig_time_evolution_var_cloudband: False
 fig_overlay_cloudband: False
 fig_show_bbox_around_blobs: False

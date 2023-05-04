@@ -15,6 +15,30 @@
 .DS_Store
 
 # Python
-__pycache__/
 *.py[cod]
 *$py.class
+*.so
+*.egg
+*.egg-info
+__pycache__
+venv/
+env/
+build/
+dist/
+.ipynb_checkpoints/
+*.ipynb~ 
+
+# Jupyter Notebook
+.ipynb_checkpoints
+/nb-*
+/.ipynb_checkpoints/*
+~$*
+*.nbconvert.ipynb
+*.html
+
+# package
+cloudbandpy.egg-info.egg-info
+
+venv
+.venv
+.gitignore
