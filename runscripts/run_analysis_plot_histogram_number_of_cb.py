@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 """
-Script to create histogram showing the percentage of the cloud band number distribution
-Run: python cloudbandpy/analysis/plot_distribution_number_of_cb.py config_analysis.yml
+Create a histogram showing the percentage of the cloud band number distribution for 2 periods: DJFM and full years
+
+Run: python cloudbandpy/analysis/run_analysis_plot_histogram_number_of_cb.py cloudbandpy/config/config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
