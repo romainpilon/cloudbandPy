@@ -19,7 +19,7 @@ from typing import Optional, Set
 
 from .cloudband import CloudBand
 from .figure_tools import set_fontsize
-from .blob_tools import compute_blob_area
+from .cb_detection import compute_blob_area
 from .misc import wrapTo180
 
 

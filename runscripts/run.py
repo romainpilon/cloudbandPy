@@ -11,7 +11,7 @@ import os
 
 from cloudbandpy.load_driver import run_load_data
 
-from cloudbandpy.blob_tools import detection_workflow
+from cloudbandpy.cb_detection import detection_workflow
 from cloudbandpy.figure_tools import *
 from cloudbandpy.io_utilities import (
     logging_setup,

@@ -28,7 +28,7 @@ def blob_detection(
         - detected_blobs: a map of blobs
     Side note: One could use the Yen (or Ostu) global thresholding method, change in parameters. For testing purpose, note for research.
     """
-    logger = logging.getLogger("blob_tools.blob_detection")
+    logger = logging.getLogger("cb_detection.blob_detection")
     cloud_band_area_threshold = float(parameters["CLOUD_BAND_AREA_THRESHOLD"])
     # Threshold value
     # We add the possibility to use histogram based methods. By default, it will use the specific threshold.      
@@ -91,7 +91,7 @@ def candidates2class(labelled_candidates, date, resolution, lons, lats):
     """
     Transform cloud band candidates into a CloudBand class
     """
-    logger = logging.getLogger("blob_tools.candidates2class")
+    logger = logging.getLogger("cb_detection.candidates2class")
     list_candidates = []
     for ilabel in set(labelled_candidates[np.where(labelled_candidates != 0)]):
         icloudband = np.zeros_like(labelled_candidates, dtype=np.uint8)
@@ -125,7 +125,7 @@ def filter_blobs2cloudbands(list_candidates: list, latitudes: np.ndarray, parame
     Args: list of cloud bands candidates for one time/date
     Return: list of cloud band object and map of all cloud bands at one time/date (one label per cloud band)
     """
-    logger = logging.getLogger("blob_tools.filter_blobs2cloudbands")
+    logger = logging.getLogger("cb_detection.filter_blobs2cloudbands")
     top_lat_criteria = parameters["TOP_LATITUDE"]
     bottom_lat_criteria = parameters["BOTTOM_LATITUDE"]
     angle_min = parameters["ANGLE_MIN"]
@@ -187,7 +187,7 @@ def detection_workflow(
         - labelled_candidates: candidate blobs that can be cloud bands
         - cloud_bands_map: actual cloud bands after applying the criteria
     """
-    logger = logging.getLogger("blob_tools.detection_workflow")
+    logger = logging.getLogger("cb_detection.detection_workflow")
     logger.info("Cloud band detection in progress")
     fill_binarize_data = np.zeros_like(var2process, dtype=np.uint8)
     dilation = np.zeros_like(var2process, dtype=np.uint8)
