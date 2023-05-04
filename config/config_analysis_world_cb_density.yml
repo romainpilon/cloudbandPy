@@ -5,7 +5,7 @@ startdate: "19590101.00"
 enddate: "20211231.00"
 
 # directory where files are saved
-saved_dirpath: './cloud_band_files'
+saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files'
 # directory where to save figures
 dir_figures: './cloud_band_figures/'
 load_saved_files: True
@@ -14,8 +14,9 @@ period_detection: 24.
 
 select_djfm: False
 
+# FIXME remove before  publishing
 # Directory where netcdf files of variable are
-clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
+clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/ERA5/netcdf/3hourly/surface_level/'
 varname_infilename: 'top_net_thermal_radiation'
 varname: 'ttr'
 timecoord_name: 'time'
