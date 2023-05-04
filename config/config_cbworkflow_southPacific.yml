@@ -5,7 +5,7 @@ run_inheritance_tracking: True
 
 # Start/end date and time
 startdate: "20160101.00"
-enddate: "20161231.00"
+enddate: "20160130.00"
 
 # Domain
 domain: "southPacific"

@@ -306,10 +306,10 @@ def pickle_save_cloudbands(config, list_of_cloud_bands):
     outpath = config["saved_dirpath"]
     os.makedirs(outpath, exist_ok=True)
     extension_fout = ".bin"
+    file_basename = f"list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}"
     if config["select_djfm"]:
-        fout = f"{outpath}/list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}_djfm{extension_fout}",
-    else:
-        fout = f"{outpath}/list_of_cloud_bands{config['startdate']}-{config['enddate']}-{config['domain']}{extension_fout}"
+        file_basename += "_djfm"
+    fout = f"{outpath}/{file_basename}{extension_fout}"
     dump_list(list_of_cloud_bands, fout)
     logger.info("Cloud bands saved")
     return

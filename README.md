@@ -18,7 +18,15 @@ Go to the directory:
 cd cloudbandPy
 ```
 
-<!-- Use environment.yml file to create a Conda virtual environment:
+Then install the package with:
+```bash
+pip install -e .
+```
+
+### --- Alternative install
+You can also set up a conda environment before installing the package.
+
+With environment.yml file, create a Conda virtual environment:
 ```bash
 conda env create --file=environment.yml
 ```
@@ -26,20 +34,37 @@ conda env create --file=environment.yml
 After setting up the Conda virtual environment, activate it with:
 ```bash
 conda activate cloudbandpy
-``` -->
+```
 
-Then install the package with:
+Then install the package
 ```bash
 pip install -e .
 ```
 
+## Input Data Requirements
+cloudbandPy works with netCDF files using netCDF4's capability to handle 3-dimension arrays of gridded latitude/longitude data. Currently, cloudbandPy  supports ERA5 data on the regular grid.
+
+The input data must contain at least 3 dimensions: time, latitude and longitude.
+cloudbandPy only supports detection and tracking data on 2D arrays
+
+
 ## Usage
-Change configuration file as needed. Eg. directories where the input data are located, where the figures will be saved, where the output files will be saved, then in the cloudbandPy directory.
+Before you run anything, make sure that the configuration file is set up the way you want it, i.e. setting up the input data directory.
+
+To run the cloud band detection, run the following command:
 
 ```python
-python ./src/cloudbandpy/run.py ./config/config_cbworkflow_southPacific.yml
+python ./runscripts/run.py ./config/config_cbworkflow_southPacific.yml
 ```
-<!-- TODO change for the runscript directory  -->
+
+Default settings are:
+- Input data are 3-hourly ERA5 OLR data with filenames written as such `top_net_thermal_radiation_yyyy.nc` where `yyyy` is the year.
+- The detection period is 24 hours.
+- Output files containing cloud bands are written in a specific directory that will be created in the current directory.
+- Figures will be saved in a specific directory that will be created in the current directory.
+
+Example run scripts are located in the `runscripts` directories.
+
 
 ## Contributing
 
@@ -48,10 +73,6 @@ to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-# cloudbandpy
-Todo
-# cloudbandpy texting version
-todo
 
 # Notes
 This package contains modified ERA5 data

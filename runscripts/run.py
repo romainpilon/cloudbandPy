@@ -88,21 +88,21 @@ if __name__ == "__main__":
     ) = run(config)
 
     # Visualization
-    # if config["fig_detection_process"]:
-    #     os.makedirs(config["dir_figures"], exist_ok=True)
-    #     show_blob_detection_process(
-    #         lons,
-    #         lats,
-    #         OLR_THRESHOLD=parameters["OLR_THRESHOLD"],
-    #         variable2process=variable2process,
-    #         fill_binarize_data=fill_binarize_data,
-    #         dilation=dilation,
-    #         labelled_blobs=labelled_blobs,
-    #         labelled_candidates=labelled_candidates,
-    #         cloud_bands_over_time=cloud_bands_over_time,
-    #         date2show=listofdates,
-    #         config=config,
-    #     )
+    if config["fig_detection_process"]:
+        os.makedirs(config["dir_figures"], exist_ok=True)
+        show_blob_detection_process(
+            lons,
+            lats,
+            OLR_THRESHOLD=parameters["OLR_THRESHOLD"],
+            variable2process=variable2process,
+            fill_binarize_data=fill_binarize_data,
+            dilation=dilation,
+            labelled_blobs=labelled_blobs,
+            labelled_candidates=labelled_candidates,
+            cloud_bands_over_time=cloud_bands_over_time,
+            date2show=listofdates,
+            config=config,
+        )
 
     if config["fig_time_evolution_object"]:
         # Time evolution of cloud bands (one panel per day, 16 days total)
@@ -121,7 +121,6 @@ if __name__ == "__main__":
 
     if config["fig_time_evolution_var_cloudband"]:
         # Show cloud bands overlaid on OLR
-        # needs 3 --> Detection
         os.makedirs(config["dir_figures"], exist_ok=True)
         plot_time_evolution_inputvar_cloubdands(
             variable2process, cloud_bands_over_time, lons, lats, listofdates, config, show=True, save=True
@@ -129,7 +128,6 @@ if __name__ == "__main__":
 
     if config["fig_overlay_cloudband"]:
         # Overlay of cloud bands
-        # needs 3 --> Detection
         os.makedirs(config["dir_figures"], exist_ok=True)
         plot_overlay_of_cloudbands(
             cloud_bands_over_time, config, lons=lons, lats=lats, transparency=0.1, show=True, save=True
@@ -137,7 +135,7 @@ if __name__ == "__main__":
 
     if config["fig_inheritance_tracking"] and config["run_inheritance_tracking"]:
         # Plot tracking on maps. It will shows as many sublpots as days
-        # needs 4 --> Tracking
+        # needs Tracking
         os.makedirs(config["dir_figures"], exist_ok=True)
         plot_tracking_on_map(
             list_of_cloud_bands=list_of_cloud_bands,
@@ -169,7 +167,6 @@ if __name__ == "__main__":
 
     if config["fig_show_bbox_around_blobs"]:
         # To use for a few days max, to see the boundary box and otrientation of labelled objects
-        # needs 3 --> Detection
         os.makedirs(config["dir_figures"], exist_ok=True)
         for idx, itime in enumerate(listofdates):
             plot_bbox_around_blobs(labelled_candidates[idx], date=itime, config=config, show=True, save=True)
