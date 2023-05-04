@@ -114,8 +114,8 @@ if __name__ == "__main__":
     add_startend_datetime2config(config_copy)
 
     # Get latitude and longitude of 0.5 degree ERA5 data for the cloud bands
-    lats_globe = np.load(os.path.join(data_localpath, "lats_globe0.5_ERA5.npy"))
-    lons_globe = np.load(os.path.join(data_localpath, "lons_globe0.5_ERA5.npy"))
+    lons_globe = np.arange(0,360,.5)
+    lats_globe = np.arange(90,-90.5,-.5)
     # Get longitudes and latitudes of South Pacific domain
     _, lonsSP = subset_longitudes(lons_globe, config_copy["lon_west"], config_copy["lon_east"])
     _, latsSP = subset_latitudes(lats_globe, config_copy["lat_north"], config_copy["lat_south"])
