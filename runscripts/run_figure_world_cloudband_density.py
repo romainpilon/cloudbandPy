@@ -9,6 +9,8 @@ to obtain a world climatology of cloud band density
 1. Load data: list_of_cloud_bands to compute density of cb
 2. Load one year for lon, lat
 3. Plot a map
+
+Run: python cloudbandpy/runscripts/run_figure_world_cloudband_density.py cloudbandpy/config/config_analysis_world_cb_density.yml
 """
 
 import matplotlib.pyplot as plt

@@ -10,6 +10,9 @@ This script creates:
 This can help to understand the chosen parameters.
 
 It uses data that have been previoulsy saved using the main script. It does not use netcdf files.
+
+Run: python cloudbandpy/runscripts/run_analysis_olr_auto_thresholding.py cloudbandpy/config/config_analysis.yml
+
 """
 
 

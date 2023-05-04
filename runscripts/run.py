@@ -2,7 +2,8 @@
 # coding: utf-8
 """
 This script allows to run the detection algorithm.
-Run cloudbandpy/runscripts/run.py config----.py
+
+Run cloudbandpy/runscripts/run.py cloudbandpy/config/config_cbworkflow_southPacific.yml
 """
 
 import logging

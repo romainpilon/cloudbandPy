@@ -9,6 +9,8 @@ Before running this script, ensure that you have extracted the cloud bands and h
 Edit config/config_analysis.yml as needed (eg: data location)
 
 Acknowledgement: the work performed was done by using data from the Global Precipitation Climatology Project and from ERA5.
+
+Run: python cloudbandpy/runscripts/run_analysis_clim_cloudbands_over_gpcp_precipitation.py cloudbandpy/config/config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
