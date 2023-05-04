@@ -4,9 +4,9 @@ startdate: "19590101.00"
 enddate: "20211231.00"
 
 # directory where cloud bands files are saved
-saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/cloud_band_files/'
+saved_dirpath: './cloud_band_files/'
 # Location of "data" from this repository
-data_localpath: './codes/unil/cloudbandPy/data/' 
+data_localpath: './cloudbandPy/data/' 
 # directory where to save figures
 dir_figures: './cloud_band_figures/'
 load_saved_files: True

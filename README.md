@@ -47,7 +47,7 @@ Before you run anything, make sure that the configuration file is set up the way
 To run the cloud band detection, run the following command:
 
 ```python
-python ./runscripts/run.py ./config/config_cbworkflow_southPacific.yml
+python ./cloudbandPy/runscripts/run.py ./cloudbandPy/config/config_cbworkflow_southPacific.yml
 ```
 
 Default settings:
