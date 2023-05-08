@@ -89,6 +89,7 @@ if __name__ == "__main__":
 
     # Visualization
     if config["fig_detection_process"]:
+        parameters = load_ymlfile(config)
         os.makedirs(config["dir_figures"], exist_ok=True)
         show_blob_detection_process(
             lons,

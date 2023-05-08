@@ -207,8 +207,9 @@ def show_blob_detection_process(
 
 
 def plot_bbox_around_blobs(
-    mapofblobs: np.ndarray, date, config: dict,
-    show: bool = True, save: bool = True
+    mapofblobs: np.ndarray,
+    date, config: dict,
+    show: bool = False, save: bool = False
 ):
     """
     This function creates a figure to show boundary box, axis of elipse (around each blob), and angle of ellipse.
@@ -228,14 +229,13 @@ def plot_bbox_around_blobs(
         y1 = y0 - np.sin(iblob.orientation) * 0.5 * iblob.axis_minor_length
         x2 = x0 - np.sin(iblob.orientation) * 0.5 * iblob.axis_major_length
         y2 = y0 - np.cos(iblob.orientation) * 0.5 * iblob.axis_major_length
-        ax.plot((x0, x1), (y0, y1), "-r", linewidth=2.5)
         ax.plot((x0, x2), (y0, y2), "--r", linewidth=2.5)
         ax.plot(x0, y0, ".g", markersize=15)
         if config["hemisphere"] == "south":
             angle_deg = (iblob.orientation * 360) / (2 * np.pi) - 90
         elif config["hemisphere"] == "north":
             angle_deg = (iblob.orientation * 360) / (2 * np.pi) + 90
-        ax.text(x0 + 0.5, y0 + 0.5, str(int(angle_deg)), color="pink")
+        ax.text(x0 + 0.5, y0 + 0.5, str(int(angle_deg))+r"°", color="pink")
         topindex, leftindex, bottomindex, rightindex = iblob.bbox
         bx = (leftindex, rightindex, rightindex, leftindex, leftindex)
         by = (topindex, topindex, bottomindex, bottomindex, topindex)
