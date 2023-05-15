@@ -15,7 +15,7 @@ import pickle
 import yaml
 
 from .cloudband import CloudBand
-from .misc import convert_olr_in_wm2, wrapTo180
+from .misc import is_decreasing, convert_olr_in_wm2, wrapTo180
 from .time_utilities import add_startend_datetime2config, create_list_of_dates
 
 
@@ -53,6 +53,7 @@ def openncfile(filename: str, config) -> tuple:
     Note: netCDF4 file assumed to contain only one variable
     and to have a single level (ERA5 surface field)
     """
+    logger = logging.getLogger("io_utilities.load_dataset")
     filedirectory = config["clouddata_path"]
     varname = config["varname"]
     timecoord_name = config["timecoord_name"]
@@ -73,6 +74,11 @@ def openncfile(filename: str, config) -> tuple:
         )
         lats = ds.variables[ycoord_name][...]
         lons = ds.variables[xcoord_name][...]
+        # Make that latitudes are decreasing (90° -> 0 -> -90°) and reshape variable accordingly
+        if not is_decreasing(lats):
+            logger.warning("latitudes are increasing. Must be decreasing. Reshapping latitudes and variable.")
+            lats = lats[::-1]
+            variable = variable[:, ::-1, :]
         return time, lons, lats, variable
     else:
         raise ValueError("Directory or file does not exist")
