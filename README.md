@@ -58,6 +58,7 @@ Default settings:
 
 Example run scripts are located in the `runscripts` directories.
 
+To see specific use of the code, a set of notebooks are located in the `notebooks` directory.
 
 ## 4. Contributing
 
