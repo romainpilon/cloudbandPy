@@ -12,9 +12,9 @@ domain: "northPacific"
 # Note: the northern border matters a lot: Polar regions has lots of cold clouds.
 hemisphere: "north"
 lon_west: 115
-lon_east: 265
+lon_east: 260
 lat_north: 50
-lat_south: -5
+lat_south: 0
 
 # Input files directory
 clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/ERA5/netcdf/3hourly/surface_level/'
