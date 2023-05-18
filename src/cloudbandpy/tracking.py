@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from functools import reduce
 import logging
 import numpy as np
 
@@ -212,10 +213,22 @@ def plot_pix(list_of_cloud_bands: list):
     return
 
 
-def compute_density(lats: np.ndarray, lons: np.ndarray, dates: list, list_of_cloud_bands: list) -> np.ndarray:
+def compute_density(dates: list, list_of_cloud_bands: list) -> np.ndarray:
+    """
+    Compute the total number of cloud bands per grid point and the mean number of cloud band per day per year
+    Return:
+        - ntot_cb: total number of cloud bands per grid point
+        - density: mean number of cloud band per day per year over the period
+    """
     logger = logging.getLogger("tracking.compute_density")
-    ntot_cb = np.zeros([len(lats), len(lons)])
-    density = np.zeros([len(lats), len(lons)])
+    # To set the shape of the ntot_cb and density,
+    # we need the shape of an array of cloud band (= [len(lons), len(lats)] of domain)
+    # Get the first cloud band of the period
+    onecloudband = reduce(lambda s1, s2: s1 or s2, list_of_cloud_bands)[0]
+    if onecloudband == None or []:
+        logger.warning("No cloud band has been detected")
+    ntot_cb = np.zeros(onecloudband.cloud_band_array.shape)
+    density = np.zeros(onecloudband.cloud_band_array.shape)
     for itime in range(len(dates)):
         for icb in enumerate(list_of_cloud_bands[itime]):
             ntot_cb += icb[1].cloud_band_array

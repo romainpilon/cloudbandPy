@@ -6,7 +6,7 @@ Plot the annual cycles of:
 - the mean number of cloud band days per month
 
 and plot the number of cloud band per year,
-for the South Pacific, North Pacific, South Atlantic and Indian Ocean domains,
+for the south Pacific, north Pacific, south Atlantic and Indian Ocean domains,
 as defined by the configuration files
 
 Run: python cloudbandpy/runscripts/plot_annualcycle_timeseries.py cloudbandpy/config/config_analysis.yml
@@ -94,34 +94,34 @@ def plot_mean_ncloud_band_days_permonth(monthlymean: pd.DataFrame, monthlymax: p
     fig, ax = plt.subplots(2, 2, figsize=(10, 10))
     ax[0, 0].bar(
         monthlymean.index,
-        monthlymax["South Pacific"],
+        monthlymax["south Pacific"],
         width,
         alpha=0.8,
         color="#3f4d89",
-        label="South Pacific",
+        label="south Pacific",
     )
-    ax[0, 0].plot(monthlymean.index, monthlymean["South Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
-    ax[0, 0].set_title("a) South Pacific", loc="left")
+    ax[0, 0].plot(monthlymean.index, monthlymean["south Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
+    ax[0, 0].set_title("a) south Pacific", loc="left")
     ax[0, 1].bar(
         monthlymean.index,
-        monthlymax["North Pacific"],
+        monthlymax["north Pacific"],
         width,
         alpha=0.8,
         color="#3f4d89",
-        label="North Pacific",
+        label="north Pacific",
     )
-    ax[0, 1].plot(monthlymean.index, monthlymean["North Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
-    ax[0, 1].set_title("b) North Pacific", loc="left")
+    ax[0, 1].plot(monthlymean.index, monthlymean["north Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
+    ax[0, 1].set_title("b) north Pacific", loc="left")
     ax[1, 0].bar(
         monthlymean.index,
-        monthlymax["South Atlantic"],
+        monthlymax["south Atlantic"],
         width,
         alpha=0.8,
         color="#3f4d89",
-        label="South Atlantic",
+        label="south Atlantic",
     )
-    ax[1, 0].plot(monthlymean.index, monthlymean["South Atlantic"], path_effects=pe1, lw=3, color="#3f4d89")
-    ax[1, 0].set_title("c) South Atlantic", loc="left")
+    ax[1, 0].plot(monthlymean.index, monthlymean["south Atlantic"], path_effects=pe1, lw=3, color="#3f4d89")
+    ax[1, 0].set_title("c) south Atlantic", loc="left")
     ax[1, 1].bar(
         monthlymean.index,
         monthlymax["Indian Ocean"],
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     list_of_cloud_bandsNP = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
     config_copy["domain"] = "southAtlantic"
     list_of_cloud_bandsSA = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
-    config_copy["domain"] = "southAfricaIO"
+    config_copy["domain"] = "southIndianOcean"
     list_of_cloud_bandsAIO = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
 
     pdlist_dates = pd.date_range(start=config_copy["datetime_startdate"], end=config_copy["datetime_enddate"], freq="D")
@@ -178,18 +178,18 @@ if __name__ == "__main__":
     ]
     # Get monthly and yearly mean of cloud bands number per day (should be improved)
     df = pd.DataFrame(
-        list4pandas, columns=["time", "South Pacific", "North Pacific", "South Atlantic", "Indian Ocean"]
+        list4pandas, columns=["time", "south Pacific", "north Pacific", "south Atlantic", "Indian Ocean"]
     )
     df_daily = df.set_index("time")
     df_daily["year"] = df_daily.index.year
     df_daily["month"] = df_daily.index.month
 
-    df2 = df_daily["South Pacific"]
-    df3 = df_daily["North Pacific"]
-    df4 = df_daily["South Atlantic"]
+    df2 = df_daily["south Pacific"]
+    df3 = df_daily["north Pacific"]
+    df4 = df_daily["south Atlantic"]
     df5 = df_daily["Indian Ocean"]
     newdf_daily = pd.concat(
-        [df2, df3], axis=0, keys=["South Pacific", "North Pacific", "South Atlantic", "Indian Ocean"]
+        [df2, df3], axis=0, keys=["south Pacific", "north Pacific", "south Atlantic", "Indian Ocean"]
     ).reset_index()
     newdf_daily.columns = ["basin", "time", "ncb"]
     newdf_daily.set_index("time", inplace=True)

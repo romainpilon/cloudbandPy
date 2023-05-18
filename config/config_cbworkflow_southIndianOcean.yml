@@ -8,7 +8,7 @@ startdate: "20160101.00"
 enddate: "20161231.00"
 
 # Domain
-domain: "southAfricaIO"
+domain: "southIndianOcean"
 # Note: the southern border matters a lot: Polar regions has lots of cold clouds.
 hemisphere: "south"
 lon_west: 0
