@@ -68,4 +68,4 @@ if __name__ == "__main__":
         savedfigurename += "_djfm"
     fig = plot_histogram(daily_variable)
     fig.show()
-    fig.savefig(savedfigurename + ".png", dpi=200, bbox_inches="tight")
+    fig.savefig(savedfigurename + ".png", dpi=300, bbox_inches="tight")

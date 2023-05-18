@@ -83,4 +83,4 @@ if __name__ == "__main__":
     fig = plot_distribution_cb_area(cb_areaSP, cb_areaSP_djfm)
     fig.show()
     figurename = f"{config_copy['dir_figures']}/distribution_cb_area_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_fullperiod_vs_djfm_{config_copy['domain']}.png"
-    fig.savefig(figurename, dpi=200, bbox_inches="tight")
+    fig.savefig(figurename, dpi=300, bbox_inches="tight")

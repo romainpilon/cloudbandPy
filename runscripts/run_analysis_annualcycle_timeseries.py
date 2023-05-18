@@ -220,7 +220,7 @@ if __name__ == "__main__":
     fig2.show()
     fig2.savefig(
         f"{config_copy['dir_figures']}/annualcycle_n_cb_per_month_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
-        dpi=200,
+        dpi=300,
         bbox_inches="tight",
     )
 
@@ -228,6 +228,6 @@ if __name__ == "__main__":
     fig3.show()
     fig3.savefig(
         f"{config_copy['dir_figures']}/annualcycle_mean_cloudband_days_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
-        dpi=200,
+        dpi=300,
         bbox_inches="tight",
     )

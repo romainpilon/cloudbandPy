@@ -112,10 +112,10 @@ def check_figure(
         if date2show:
             plt.savefig(
                 f"{figname}_{date2show.strftime('%Y')}-{date2show.strftime('%m')}{date2show.strftime('%d')}-{date2show.strftime('%HH')}.png",
-                dpi=200, bbox_inches="tight",
+                dpi=300, bbox_inches="tight",
             )
         else:
-            plt.savefig(f"{figname}.png",dpi=200, bbox_inches="tight")
+            plt.savefig(f"{figname}.png",dpi=300, bbox_inches="tight")
     return
 
 
@@ -201,7 +201,7 @@ def show_blob_detection_process(
     plt.show(block=False)
     plt.savefig(
         f"{config['dir_figures']}/blob_detection_process_{date2show[0].strftime('%d')}-{date2show[0].strftime('%m')}-{date2show[0].strftime('%Y')}_{config['domain']}.png",
-        dpi=200, bbox_inches="tight",
+        dpi=300, bbox_inches="tight",
     )
     return
 
@@ -243,7 +243,7 @@ def plot_bbox_around_blobs(
     if show:
         plt.show(block=False)
     if save:
-        plt.savefig(f"{config['dir_figures']}/bbox_around_blobs_{date.strftime('%Y-%m-%d')}_{config['domain']}.png", dpi=200, bbox_inches="tight")
+        plt.savefig(f"{config['dir_figures']}/bbox_around_blobs_{date.strftime('%Y-%m-%d')}_{config['domain']}.png", dpi=300, bbox_inches="tight")
     return
 
 
