@@ -9,7 +9,7 @@ and plot the number of cloud band per year,
 for the south Pacific, north Pacific, south Atlantic and Indian Ocean domains,
 as defined by the configuration files
 
-Run: python cloudbandpy/runscripts/plot_annualcycle_timeseries.py cloudbandpy/config/config_analysis.yml
+Run: python cloudbandPy/runscripts/plot_annualcycle_timeseries.py cloudbandPy/config/config_analysis.yml
 """
 
 import matplotlib.pyplot as plt

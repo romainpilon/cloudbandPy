@@ -3,7 +3,7 @@
 """
 Create a histogram showing the percentage of the cloud band number distribution for 2 periods: DJFM and full years
 
-Run: python cloudbandpy/analysis/run_analysis_plot_histogram_number_of_cb.py cloudbandpy/config/config_analysis.yml
+Run: python cloudbandPy/analysis/run_analysis_plot_histogram_number_of_cb.py cloudbandPy/config/config_analysis.yml
 """
 
 import matplotlib.pyplot as plt

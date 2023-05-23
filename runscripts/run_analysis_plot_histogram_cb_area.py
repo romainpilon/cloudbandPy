@@ -3,7 +3,7 @@
 """
 Create a histogram showing the distribution of cloud band area for 2 periods: DJFM and full years
 
-Run: python cloudbandpy/analysis/run_analysis_plot_histogram_cb_area.py cloudbandpy/config/config_analysis.yml
+Run: python cloudbandPy/analysis/run_analysis_plot_histogram_cb_area.py cloudbandPy/config/config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
