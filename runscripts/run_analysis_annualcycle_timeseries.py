@@ -9,7 +9,7 @@ and plot the number of cloud band per year,
 for the south Pacific, north Pacific, south Atlantic and Indian Ocean domains,
 as defined by the configuration files
 
-Run: python cloudbandPy/runscripts/plot_annualcycle_timeseries.py cloudbandPy/config/config_analysis.yml
+Run: python cloudbandpy/runscripts/plot_annualcycle_timeseries.py cloudbandpy/config/config_analysis.yml
 """
 
 import matplotlib.pyplot as plt
@@ -48,7 +48,10 @@ def plot_mean_ncloudband_per_year(yearlymsum: pd.DataFrame):
     cmap = get_cmap(len(yearlymsum.keys()[:-1]))
     fig, ax = plt.subplots(1, 1, figsize=(11, 4))
     for i, name in enumerate(yearlymsum.keys()[:-1]):  # no index
-        ax.plot(yearlymsum.index, yearlymsum[name], lw=2, c=cmap(i), label=name)
+        if name=="Indian Ocean":
+            ax.plot(yearlymsum.index, yearlymsum[name], lw=2, c="#eac425", label=name)
+        else:
+            ax.plot(yearlymsum.index, yearlymsum[name], lw=2, c=cmap(i), label=name)
     #
     ax.set_xticklabels(yearlymsum.index)
     ax.xaxis.set_major_locator(mdates.YearLocator(10))
@@ -69,7 +72,10 @@ def plot_mean_ncloudband_per_month(monthlysum: pd.DataFrame):
     cmap = get_cmap(len(monthlysum.keys()[:-1]))
     fig, ax = plt.subplots(1, 1, figsize=(9.8, 7))
     for i, name in enumerate(monthlysum.keys()[:-1]):  # no index
-        ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c=cmap(i), label=name)
+        if name=="Indian Ocean":
+            ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c="#eac425", label=name)
+        else:
+            ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c=cmap(i), label=name)
     #
     ax.set_xticks(range(1, 13))
     ax.yaxis.set_major_locator(MultipleLocator(5))
