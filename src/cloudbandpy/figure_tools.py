@@ -112,10 +112,10 @@ def check_figure(
         if date2show:
             plt.savefig(
                 f"{figname}_{date2show.strftime('%Y')}-{date2show.strftime('%m')}{date2show.strftime('%d')}-{date2show.strftime('%HH')}.png",
-                dpi=200, bbox_inches="tight",
+                dpi=300, bbox_inches="tight",
             )
         else:
-            plt.savefig(f"{figname}.png",dpi=200, bbox_inches="tight")
+            plt.savefig(f"{figname}.png",dpi=300, bbox_inches="tight")
     return
 
 
@@ -201,14 +201,15 @@ def show_blob_detection_process(
     plt.show(block=False)
     plt.savefig(
         f"{config['dir_figures']}/blob_detection_process_{date2show[0].strftime('%d')}-{date2show[0].strftime('%m')}-{date2show[0].strftime('%Y')}_{config['domain']}.png",
-        dpi=200, bbox_inches="tight",
+        dpi=300, bbox_inches="tight",
     )
     return
 
 
 def plot_bbox_around_blobs(
-    mapofblobs: np.ndarray, date, config: dict,
-    show: bool = True, save: bool = True
+    mapofblobs: np.ndarray,
+    date, config: dict,
+    show: bool = False, save: bool = False
 ):
     """
     This function creates a figure to show boundary box, axis of elipse (around each blob), and angle of ellipse.
@@ -228,14 +229,13 @@ def plot_bbox_around_blobs(
         y1 = y0 - np.sin(iblob.orientation) * 0.5 * iblob.axis_minor_length
         x2 = x0 - np.sin(iblob.orientation) * 0.5 * iblob.axis_major_length
         y2 = y0 - np.cos(iblob.orientation) * 0.5 * iblob.axis_major_length
-        ax.plot((x0, x1), (y0, y1), "-r", linewidth=2.5)
         ax.plot((x0, x2), (y0, y2), "--r", linewidth=2.5)
         ax.plot(x0, y0, ".g", markersize=15)
         if config["hemisphere"] == "south":
             angle_deg = (iblob.orientation * 360) / (2 * np.pi) - 90
         elif config["hemisphere"] == "north":
             angle_deg = (iblob.orientation * 360) / (2 * np.pi) + 90
-        ax.text(x0 + 0.5, y0 + 0.5, str(int(angle_deg)), color="pink")
+        ax.text(x0 + 0.5, y0 + 0.5, str(int(angle_deg))+r"°", color="pink")
         topindex, leftindex, bottomindex, rightindex = iblob.bbox
         bx = (leftindex, rightindex, rightindex, leftindex, leftindex)
         by = (topindex, topindex, bottomindex, bottomindex, topindex)
@@ -243,7 +243,7 @@ def plot_bbox_around_blobs(
     if show:
         plt.show(block=False)
     if save:
-        plt.savefig(f"{config['dir_figures']}/bbox_around_blobs_{date.strftime('%Y-%m-%d')}_{config['domain']}.png", dpi=200, bbox_inches="tight")
+        plt.savefig(f"{config['dir_figures']}/bbox_around_blobs_{date.strftime('%Y-%m-%d')}_{config['domain']}.png", dpi=300, bbox_inches="tight")
     return
 
 

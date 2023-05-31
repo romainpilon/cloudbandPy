@@ -6,7 +6,7 @@ Plot the annual cycles of:
 - the mean number of cloud band days per month
 
 and plot the number of cloud band per year,
-for the South Pacific, North Pacific, South Atlantic and Indian Ocean domains,
+for the south Pacific, north Pacific, south Atlantic and Indian Ocean domains,
 as defined by the configuration files
 
 Run: python cloudbandpy/runscripts/plot_annualcycle_timeseries.py cloudbandpy/config/config_analysis.yml
@@ -48,7 +48,10 @@ def plot_mean_ncloudband_per_year(yearlymsum: pd.DataFrame):
     cmap = get_cmap(len(yearlymsum.keys()[:-1]))
     fig, ax = plt.subplots(1, 1, figsize=(11, 4))
     for i, name in enumerate(yearlymsum.keys()[:-1]):  # no index
-        ax.plot(yearlymsum.index, yearlymsum[name], lw=2, c=cmap(i), label=name)
+        if name=="Indian Ocean":
+            ax.plot(yearlymsum.index, yearlymsum[name], lw=2, c="#eac425", label=name)
+        else:
+            ax.plot(yearlymsum.index, yearlymsum[name], lw=2, c=cmap(i), label=name)
     #
     ax.set_xticklabels(yearlymsum.index)
     ax.xaxis.set_major_locator(mdates.YearLocator(10))
@@ -69,7 +72,10 @@ def plot_mean_ncloudband_per_month(monthlysum: pd.DataFrame):
     cmap = get_cmap(len(monthlysum.keys()[:-1]))
     fig, ax = plt.subplots(1, 1, figsize=(9.8, 7))
     for i, name in enumerate(monthlysum.keys()[:-1]):  # no index
-        ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c=cmap(i), label=name)
+        if name=="Indian Ocean":
+            ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c="#eac425", label=name)
+        else:
+            ax.plot(monthlysum.index, monthlysum[name] / nyears, lw=2, c=cmap(i), label=name)
     #
     ax.set_xticks(range(1, 13))
     ax.yaxis.set_major_locator(MultipleLocator(5))
@@ -94,34 +100,34 @@ def plot_mean_ncloud_band_days_permonth(monthlymean: pd.DataFrame, monthlymax: p
     fig, ax = plt.subplots(2, 2, figsize=(10, 10))
     ax[0, 0].bar(
         monthlymean.index,
-        monthlymax["South Pacific"],
+        monthlymax["south Pacific"],
         width,
         alpha=0.8,
         color="#3f4d89",
-        label="South Pacific",
+        label="south Pacific",
     )
-    ax[0, 0].plot(monthlymean.index, monthlymean["South Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
-    ax[0, 0].set_title("a) South Pacific", loc="left")
+    ax[0, 0].plot(monthlymean.index, monthlymean["south Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
+    ax[0, 0].set_title("a) south Pacific", loc="left")
     ax[0, 1].bar(
         monthlymean.index,
-        monthlymax["North Pacific"],
+        monthlymax["north Pacific"],
         width,
         alpha=0.8,
         color="#3f4d89",
-        label="North Pacific",
+        label="north Pacific",
     )
-    ax[0, 1].plot(monthlymean.index, monthlymean["North Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
-    ax[0, 1].set_title("b) North Pacific", loc="left")
+    ax[0, 1].plot(monthlymean.index, monthlymean["north Pacific"], path_effects=pe1, lw=3, color="#3f4d89")
+    ax[0, 1].set_title("b) north Pacific", loc="left")
     ax[1, 0].bar(
         monthlymean.index,
-        monthlymax["South Atlantic"],
+        monthlymax["south Atlantic"],
         width,
         alpha=0.8,
         color="#3f4d89",
-        label="South Atlantic",
+        label="south Atlantic",
     )
-    ax[1, 0].plot(monthlymean.index, monthlymean["South Atlantic"], path_effects=pe1, lw=3, color="#3f4d89")
-    ax[1, 0].set_title("c) South Atlantic", loc="left")
+    ax[1, 0].plot(monthlymean.index, monthlymean["south Atlantic"], path_effects=pe1, lw=3, color="#3f4d89")
+    ax[1, 0].set_title("c) south Atlantic", loc="left")
     ax[1, 1].bar(
         monthlymean.index,
         monthlymax["Indian Ocean"],
@@ -159,7 +165,7 @@ if __name__ == "__main__":
     list_of_cloud_bandsNP = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
     config_copy["domain"] = "southAtlantic"
     list_of_cloud_bandsSA = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
-    config_copy["domain"] = "southAfricaIO"
+    config_copy["domain"] = "southIndianOcean"
     list_of_cloud_bandsAIO = load_data_from_saved_var_files(config_copy, varname="list_of_cloud_bands")
 
     pdlist_dates = pd.date_range(start=config_copy["datetime_startdate"], end=config_copy["datetime_enddate"], freq="D")
@@ -178,18 +184,18 @@ if __name__ == "__main__":
     ]
     # Get monthly and yearly mean of cloud bands number per day (should be improved)
     df = pd.DataFrame(
-        list4pandas, columns=["time", "South Pacific", "North Pacific", "South Atlantic", "Indian Ocean"]
+        list4pandas, columns=["time", "south Pacific", "north Pacific", "south Atlantic", "Indian Ocean"]
     )
     df_daily = df.set_index("time")
     df_daily["year"] = df_daily.index.year
     df_daily["month"] = df_daily.index.month
 
-    df2 = df_daily["South Pacific"]
-    df3 = df_daily["North Pacific"]
-    df4 = df_daily["South Atlantic"]
+    df2 = df_daily["south Pacific"]
+    df3 = df_daily["north Pacific"]
+    df4 = df_daily["south Atlantic"]
     df5 = df_daily["Indian Ocean"]
     newdf_daily = pd.concat(
-        [df2, df3], axis=0, keys=["South Pacific", "North Pacific", "South Atlantic", "Indian Ocean"]
+        [df2, df3], axis=0, keys=["south Pacific", "north Pacific", "south Atlantic", "Indian Ocean"]
     ).reset_index()
     newdf_daily.columns = ["basin", "time", "ncb"]
     newdf_daily.set_index("time", inplace=True)
@@ -220,7 +226,7 @@ if __name__ == "__main__":
     fig2.show()
     fig2.savefig(
         f"{config_copy['dir_figures']}/annualcycle_n_cb_per_month_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
-        dpi=200,
+        dpi=300,
         bbox_inches="tight",
     )
 
@@ -228,6 +234,6 @@ if __name__ == "__main__":
     fig3.show()
     fig3.savefig(
         f"{config_copy['dir_figures']}/annualcycle_mean_cloudband_days_{config_copy['datetime_startdate'].year}_{config_copy['datetime_enddate'].year}_4basins.png",
-        dpi=200,
+        dpi=300,
         bbox_inches="tight",
     )

@@ -11,7 +11,7 @@ This can help to understand the chosen parameters.
 
 It uses data that have been previoulsy saved using the main script. It does not use netcdf files.
 
-Run: python cloudbandpy/runscripts/run_analysis_olr_auto_thresholding.py cloudbandpy/config/config_analysis.yml
+Run: python cloudbandPy/runscripts/run_analysis_olr_auto_thresholding.py cloudbandPy/config/config_analysis.yml
 
 """
 
@@ -27,19 +27,23 @@ from cloudbandpy.figure_tools import set_fontsize
 from cloudbandpy.io_utilities import load_ymlfile, load_data_from_saved_var_files
 from cloudbandpy.misc import parse_arguments
 
-def plot_histogram(variable4analyis):
-    # Histogram of OLR with optimal global threshold
-    # Make one value per year
+def get_histogram(variable4analyis):
     valyen = [threshold_yen(var) for var in variable4analyis]
     valotsu = [threshold_otsu(var) for var in variable4analyis]
     hist, bins_center = exposure.histogram(np.concatenate(variable4analyis).ravel())
-    #
+    return valyen, valotsu, hist, bins_center
+
+def plot_histogram(valyen, valotsu, hist, bins_center):
+    # Histogram of OLR with optimal global threshold
+    # Make one value per year
     set_fontsize(size=13)
     fig, ax = plt.subplots()
-    ax.axvline(np.median(valyen), color="k", ls="solid")
+    ax.axvline(np.median(valyen), color="k", ls="dashed")
     ax.axvspan(np.min(valyen), np.max(valyen), alpha=0.5, facecolor="#ababab")
     ax.axvline(np.median(valotsu), color="#ff5c7f", ls="dashed")
     ax.axvspan(np.min(valotsu), np.max(valotsu), alpha=0.5, facecolor="#ff5c7f")
+    ax.axvline(210, color="green", ls="solid", lw=2)
+    ax.annotate("Our threshold", xy=(210, 0), xytext=(110, 1e7 / 2), arrowprops=dict(arrowstyle='->',facecolor='green'), fontsize=13, va='top', ha='left')
     ax.plot(bins_center, hist, lw=2)
     ax.set_xlabel(r"OLR (W.m$^{-2}$)")
     ax.set_ylabel(r"PDF")
@@ -66,6 +70,7 @@ if __name__ == "__main__":
     savedfigurename = f"{config['dir_figures']}/distribution_valYen_Otsu_autoThreshold_{config['datetime_startdate'].year}_{config['datetime_enddate'].year}_{config['domain']}"
     if config["select_djfm"]:
         savedfigurename += "_djfm"
-    fig = plot_histogram(daily_variable)
+    valyen, valotsu, hist, bins_center = get_histogram(daily_variable)
+    fig = plot_histogram(valyen, valotsu, hist, bins_center)
     fig.show()
-    fig.savefig(savedfigurename + ".png", dpi=200, bbox_inches="tight")
+    fig.savefig(savedfigurename + ".png", dpi=300, bbox_inches="tight")

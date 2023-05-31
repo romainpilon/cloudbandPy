@@ -20,8 +20,11 @@ def compute_resolution(lons: np.ndarray, lats: np.ndarray) -> np.ndarray:
     """From latitudes and longitudes, compute the resolution in meter"""
     dx, dy = mpcalc.lat_lon_grid_deltas(lons, lats)
     # resolution in km
-    res_dx = dx[:, 0].magnitude / 1000.0  # length of lons/dx according to latitudes
-    res_dy = dy.magnitude.mean() / 1000.0 * -1  # length of lat/dy constant on regular grid
+    # length of lons/dx according to latitudes
+    res_dx = dx[:, 0].magnitude / 1000.0
+    # length of lat/dy constant on regular grid
+    # (-1 here to change the orientation of the frame of reference: upward, owing to mpcalc)
+    res_dy = dy.magnitude.mean() / 1000.0 * -1
     resolution = res_dx * res_dy  # in square km, shape of res_dx or lats
     return resolution
 
@@ -61,3 +64,10 @@ def wrapTo180(xin) -> Any:
 def convert_olr_in_wm2(olrin):
     # Convert top thermal radiation in J m**-2 into W.m**-2
     return np.divide(-1 * olrin, 3600)
+
+
+def is_decreasing(arr):
+    for i in range(1, len(arr)):
+        if arr[i] >= arr[i - 1]:
+            return False
+    return True

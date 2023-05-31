@@ -3,7 +3,7 @@
 """
 This script allows to run the detection algorithm.
 
-Run cloudbandpy/runscripts/run.py cloudbandpy/config/config_cbworkflow_southPacific.yml
+Run cloudbandPy/runscripts/run.py cloudbandPy/config/config_cbworkflow_southPacific.yml
 """
 
 import logging
@@ -89,6 +89,7 @@ if __name__ == "__main__":
 
     # Visualization
     if config["fig_detection_process"]:
+        parameters = load_ymlfile(config)
         os.makedirs(config["dir_figures"], exist_ok=True)
         show_blob_detection_process(
             lons,

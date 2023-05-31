@@ -19,8 +19,6 @@ lat_south: -50
 # Input files directory
 clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
-resolution_data: 0.5 # degree
-# Data specific
 # calculate daily mean of the input variable for detection
 qd_var: True
 # temporal resolution of the input data

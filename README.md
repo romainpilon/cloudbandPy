@@ -42,7 +42,7 @@ cloudbandPy only supports detection and tracking data on 2D arrays.
 
 
 ## 3. Usage
-Before you run anything, make sure that the configuration file is set up the way you want it, i.e. setting up the input data directory.
+Before you run anything, make sure that the configuration file is set up the way you want it, i.e. setting up the input data directory, all the path of the files
 
 To run the cloud band detection, run the following command:
 
@@ -58,6 +58,7 @@ Default settings:
 
 Example run scripts are located in the `runscripts` directories.
 
+To see specific use of the code, a set of notebooks are located in the `notebooks` directory.
 
 ## 4. Contributing
 
@@ -69,4 +70,6 @@ Please make sure to update tests as appropriate.
 
 ## 5. Disclaimer
 This package contains modified ERA5 data.
-Copernicus Climate Change Service (C3S) (2023): ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). 10.24381/cds.adbb2d47
+Copernicus Climate Change Service (C3S) (2023): ERA5 hourly data on single levels from 1959 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). 10.24381/cds.adbb2d47
+
+Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data this code contains.

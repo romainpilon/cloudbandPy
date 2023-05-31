@@ -12,15 +12,13 @@ domain: "northPacific"
 # Note: the northern border matters a lot: Polar regions has lots of cold clouds.
 hemisphere: "north"
 lon_west: 115
-lon_east: 265
+lon_east: 260
 lat_north: 50
-lat_south: -5
+lat_south: 8
 
 # Input files directory
 clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
-resolution_data: 0.5 # degree
-# Data specific
 # calculate daily mean of the input variable for detection
 qd_var: True
 # temporal resolution of the input data
