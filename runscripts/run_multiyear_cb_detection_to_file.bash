@@ -11,14 +11,14 @@
 module purge
 module load gcc python
 module load geos proj
-source /work/FAC/FGSE/IDYST/ddomeise/default/romain/ProdEnvPy3.9/bin/activate
+source ./ProdEnvPy3.9/bin/activate
 
 DIR=/users/rpilon
 cd "${DIR}" || return
 
 # Set paths
 # for code source
-srcdir=/users/rpilon/codes/unil/cloudbandPy
+srcdir=./cloudbandPy
 # for temporary config files. we create one config file per year to save memory (instead of loading 43 years of reanalysis)
 tmpdir_config=/users/rpilon/tmp
 [[ ! -d "${tmpdir_config}" ]] && mkdir "${tmpdir_config}"
