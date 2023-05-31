@@ -42,7 +42,7 @@ cloudbandPy only supports detection and tracking data on 2D arrays.
 
 
 ## 3. Usage
-Before you run anything, make sure that the configuration file is set up the way you want it, i.e. setting up the input data directory, all the path of the files
+Before you run anything, make sure that the configuration file is set up the way you want it, i.e. setting up the input data directory, all the paths of the files, and so on
 
 To run the cloud band detection, run the following command:
 
