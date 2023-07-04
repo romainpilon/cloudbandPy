@@ -26,7 +26,6 @@ from .misc import wrapTo180
 
 def set_fontsize(size: int = 11):
     """Set fontsize on the figure"""
-    mpl.rcParams.update(mpl.rcParamsDefault)
     mpl.rcParams["text.usetex"] = False
     mpl.rcParams["font.size"] = size
     mpl.rcParams["axes.titlesize"] = size
