@@ -109,7 +109,15 @@ def plot_tracking_on_map(
             map = list_of_cloud_bands[inc][0].cloud_band_array
             for i, m in enumerate(list_of_cloud_bands[inc][1:]):
                 map = map + (i + 2) * m.cloud_band_array
-            ax.contourf(lons, lats, np.ma.masked_where(map == 0, map), transform=ccrs.PlateCarree(), levels=range(4))
+            colorband = ["forestgreen", "deepskyblue"]
+            masked_map = np.ma.masked_where(map == 0, map)
+            ax.contourf(lons,
+                        lats,
+                        masked_map,
+                        transform=ccrs.PlateCarree(),
+                        levels=range(4),
+                        alpha=0.95,
+                        colors=colorband[: masked_map.max()])
         else:  # no cloud band: we show an empty array made out the first cloud band array in the list
             emap = np.copy([el for el in list_of_cloud_bands if len(el)][0][0].cloud_band_array)
             emap[emap != 0] = 0
