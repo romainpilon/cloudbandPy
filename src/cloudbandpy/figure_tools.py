@@ -58,6 +58,7 @@ def set_presentation_style():
     mpl.rcParams["savefig.facecolor"] = "#2A2A2A"
     mpl.rcParams["savefig.edgecolor"] = "#2A2A2A"
     mpl.rcParams["font.family"] = "Futura"
+    mpl.rcParams["axes.labelcolor"] = "white"
     return
 
 
