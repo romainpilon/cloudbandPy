@@ -30,7 +30,7 @@ def run_load_data(config: dict):
         variable2process, lons, lats = load_dataset(config)
     else:
         # Load from saved files
-        logger.info(f"Use data saved in ")
+        logger.info(f"Use data saved in {config['saved_dirpath']}")
         # todo make is more general, eg for a specific domain
         lons = np.load(f"{config['saved_dirpath']}/lons_{config['domain']}.npy")
         lats = np.load(f"{config['saved_dirpath']}/lats_{config['domain']}.npy")
