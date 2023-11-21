@@ -23,6 +23,7 @@
 __pycache__
 venv/
 env/
+myenv/
 build/
 dist/
 .ipynb_checkpoints/
