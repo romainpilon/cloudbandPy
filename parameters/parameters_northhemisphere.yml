@@ -16,4 +16,4 @@ ANGLE_MAX: 90
 
 # Tracking parameters
 # overlap fraction threshold. Clouds that overlap more than this between times are tracked
-othresh: 0.4
+othresh: 0.1
