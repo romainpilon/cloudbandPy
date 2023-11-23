@@ -232,7 +232,7 @@ def detection_workflow(
                 cloud_bands_map[idx] += iblob.cloud_band_array * (icb + 1)
     #
     logger.info("Cloud band detection done")
-    return fill_binarize_data, dilation, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_cloud_bands
+    return fill_binarize_data, dilation, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_candidates, list_of_cloud_bands
 
 
 def compute_blob_area(img: np.ndarray, idx: int, resolution: np.ndarray) -> float:
