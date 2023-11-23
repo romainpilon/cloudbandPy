@@ -45,7 +45,7 @@ def tracking(list_of_cloud_bands, resolution, overlapfactor: float = 0.1) -> lis
     --> allows a two-way parenting identification
     
     By default, we day that we want at least 10% of overlap: subjective value.
-    If no value -> possibility of 1 pixel overlap: we do not want that.
+    If no value -> possibility of 1 pixel overlap, but also it may allow a better temporal connection between cloud bands
     """
     logger.info("Inheritance tracking in progress")
     list_tracked_cloudband = list_of_cloud_bands.copy()  # copy to avoid side effects
