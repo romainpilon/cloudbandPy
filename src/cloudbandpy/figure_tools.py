@@ -130,7 +130,7 @@ def check_figure(
 def show_blob_detection_process(
     lons: np.ndarray,
     lats: np.ndarray,
-    OLR_THRESHOLD,
+    THRESHOLD,
     variable2process: np.ndarray,
     fill_binarize_data: np.ndarray,
     dilation: np.ndarray,
@@ -151,7 +151,7 @@ def show_blob_detection_process(
         3,
         2,
         figsize=(9, 6.5),
-        subplot_kw={"projection": ccrs.PlateCarree(central_longitude=180)},
+        subplot_kw={"projection": ccrs.PlateCarree(central_longitude=0)},
         sharey=True,
         sharex=True,
     )
@@ -169,7 +169,7 @@ def show_blob_detection_process(
         lats,
         variable2process[0],
         transform=ccrs.PlateCarree(),
-        levels=list([OLR_THRESHOLD]),
+        levels=list([THRESHOLD]),
         colors="yellow",
         linewidths=0.6,
     )

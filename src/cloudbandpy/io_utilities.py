@@ -15,7 +15,7 @@ import pickle
 import yaml
 
 from .cloudband import CloudBand
-from .misc import is_decreasing, convert_olr_in_wm2, wrapTo180
+from .misc import is_decreasing, is_longitudes0360, convert_olr_in_wm2, wrapTo180
 from .time_utilities import add_startend_datetime2config, create_list_of_dates
 
 
@@ -130,6 +130,7 @@ def load_dataset(config: dict) -> tuple:
     # Create daily mean of the input variable?
     if config["qd_var"]:
         variable4cb = make_daily_average(variable4cb, timein, config)
+        logger.warning(variable4cb.shape)
         # Save daily variable (and latitudes and longitudes)
         if config["save_dailyvar"]:
             logger.info("Saving daily variable")
@@ -156,6 +157,7 @@ def get_variable_lonlat_from_domain(
     """
     logger = logging.getLogger("io_utilities.get_variable_lonlat_from_domain")
     if lon_east < lon_west:
+        # FIXME
         logger.info("Domain is 'over' the map. Stitching one side to the other")
         # going over longitude 0° when the longitudes go from 0 to 360°
         # Atlantic ocean, we need to cycle the data due to the domain crossing 0°.
@@ -223,9 +225,11 @@ def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, conf
         id_start, id_end = get_ids_start_end4timecrop(itime, config, inputtime=inputtime)
         # Daily mean of the input variable (OLR). Works as smoothing
         variable4cb = np.nanmean(variable2process[id_start:id_end, ...], 0)
+        
         daily_tmp_variable.append(variable4cb)
     # Stack list of daily averages
     daily_variable = np.stack(daily_tmp_variable)
+    logger.info(f"daily_variable shape:{daily_variable.shape}")
     logger.info("Computation of daily average done")
     return daily_variable
 

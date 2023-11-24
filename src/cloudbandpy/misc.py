@@ -71,3 +71,18 @@ def is_decreasing(arr):
         if arr[i] >= arr[i - 1]:
             return False
     return True
+
+def is_longitudes0360(longitudes):
+    # Check first if the array is not empty
+    if not longitudes:
+        return False
+    
+    # Get the min and max of the longitudes
+    min_longitude = min(longitudes)
+    max_longitude = max(longitudes)
+    
+    # Check if the range falls within 0 to 360 or -180 to 180
+    if (min_longitude >= 0 and max_longitude <= 360):
+        return True
+    else:
+        return False
