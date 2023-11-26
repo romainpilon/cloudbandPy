@@ -14,6 +14,8 @@ BOTTOM_LATITUDE: -27
 ANGLE_MIN: -90
 ANGLE_MAX: -5
 
-# Tracking parameters
-# overlap fraction threshold. Clouds that overlap more than this between times are tracked
-othresh: 0.4
+# Inheritance tracking parameters
+# Overlap fraction threshold. Clouds that overlap more than this between times are tracked.
+# A value of 10% allows to avoid temporal connection with one-pixel overlap.
+# If threshold set to 0, the code will connect two consecutive cloud bands with any overlap.
+othresh: 0.

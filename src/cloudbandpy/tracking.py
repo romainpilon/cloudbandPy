@@ -36,12 +36,17 @@ def findCloud(dates, name) -> Optional[CloudBand]:
     return None
 
 
-def tracking(list_of_cloud_bands, resolution, overlapfactor) -> list:
-    """Allows to get the parents of each clouds if they have any.
+def tracking(list_of_cloud_bands, resolution, overlapfactor: float = 0.1) -> list:
+    """
+    Allows to get the parents of each clouds if they have any.
     Each cloud band are compared with whatever cloud bands are present the previous day
     through intersection -> they can have a parent or more,
     Then each parents are compared with cloud abnds of the day whether they intersect
-    --> allows a two-way parenting identification"""
+    --> allows a two-way parenting identification
+    
+    By default, we day that we want at least 10% of overlap: subjective value.
+    If no value -> possibility of 1 pixel overlap, but also it may allow a better temporal connection between cloud bands
+    """
     logger.info("Inheritance tracking in progress")
     list_tracked_cloudband = list_of_cloud_bands.copy()  # copy to avoid side effects
     for idx, clouds in enumerate(list_of_cloud_bands):
@@ -61,7 +66,7 @@ def tracking(list_of_cloud_bands, resolution, overlapfactor) -> list:
     return list_tracked_cloudband
 
 
-def is_in(orig: "CloudBand", other: "CloudBand", resolution: np.ndarray, overlapfactor: float = 0.4) -> bool:
+def is_in(orig: "CloudBand", other: "CloudBand", resolution: np.ndarray, overlapfactor: float) -> bool:
     """Check whether the cloud band is in (overlayed over) another cloud band"""
     intersection = orig.cloud_band_array * other.cloud_band_array
     area_intersection = compute_blob_area(intersection, 1, resolution)
@@ -109,7 +114,15 @@ def plot_tracking_on_map(
             map = list_of_cloud_bands[inc][0].cloud_band_array
             for i, m in enumerate(list_of_cloud_bands[inc][1:]):
                 map = map + (i + 2) * m.cloud_band_array
-            ax.contourf(lons, lats, np.ma.masked_where(map == 0, map), transform=ccrs.PlateCarree(), levels=range(4))
+            colorband = ["forestgreen", "deepskyblue"]
+            masked_map = np.ma.masked_where(map == 0, map)
+            ax.contourf(lons,
+                        lats,
+                        masked_map,
+                        transform=ccrs.PlateCarree(),
+                        levels=range(4),
+                        alpha=0.95,
+                        colors=colorband[: masked_map.max()])
         else:  # no cloud band: we show an empty array made out the first cloud band array in the list
             emap = np.copy([el for el in list_of_cloud_bands if len(el)][0][0].cloud_band_array)
             emap[emap != 0] = 0

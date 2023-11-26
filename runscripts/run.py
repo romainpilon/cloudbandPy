@@ -35,6 +35,7 @@ def run(config: dict):
         labelled_blobs,
         labelled_candidates,
         cloud_bands_over_time,
+        list_of_candidates,
         list_of_cloud_bands,
     ) = detection_workflow(
         var2process=variable2process,
@@ -63,6 +64,7 @@ def run(config: dict):
         labelled_blobs,
         labelled_candidates,
         cloud_bands_over_time,
+        list_of_candidates,
         list_of_cloud_bands,
     )
 
@@ -84,6 +86,7 @@ if __name__ == "__main__":
         labelled_blobs,
         labelled_candidates,
         cloud_bands_over_time,
+        list_of_candidates,
         list_of_cloud_bands,
     ) = run(config)
 
