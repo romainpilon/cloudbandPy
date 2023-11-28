@@ -151,7 +151,7 @@ def show_blob_detection_process(
         3,
         2,
         figsize=(9, 6.5),
-        subplot_kw={"projection": ccrs.PlateCarree(central_longitude=0)},
+        subplot_kw={"projection": ccrs.PlateCarree(central_longitude=180)},
         sharey=True,
         sharex=True,
     )
