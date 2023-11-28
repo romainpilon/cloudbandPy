@@ -157,21 +157,22 @@ def get_variable_lonlat_from_domain(
     """
     logger = logging.getLogger("io_utilities.get_variable_lonlat_from_domain")
     if lon_east < lon_west:
-        # FIXME
-        logger.info("Domain is 'over' the map. Stitching one side to the other")
+        # FIXME: Make it happend when reading the grid, not the config longitudes E/W
+        logger.info("Longitudes are going from -180 to 180 and domain is Pacific, or longitudes from 0 to 360 and domain is Atlantic: Mapping...")
+        logger.info("Remapping")
         # going over longitude 0° when the longitudes go from 0 to 360°
         # Atlantic ocean, we need to cycle the data due to the domain crossing 0°.
         lons_inwrap180 = wrapTo180(lons_in)
+        lons_inwrap180 = lons_inwrap180.flatten()
         lons180 = np.concatenate(
-            (lons_inwrap180[len(lons_inwrap180) // 2 :], lons_inwrap180[: len(lons_inwrap180) // 2])
-        )
+                (lons_inwrap180[len(lons_inwrap180) // 2 :], lons_inwrap180[: len(lons_inwrap180) // 2])
+            )
         variable = np.dstack((variable[:, :, len(lons_in) // 2 :], variable[:, :, : len(lons_in) // 2]))
-        indice_west = [idx for idx, el in enumerate(lons180) if el == wrapTo180(lon_west)][0]
-        indice_east = [idx for idx, el in enumerate(lons180) if el == wrapTo180(lon_east)][0]
+        # Find the nearest index for lon_west and lon_east
+        indice_west = np.abs(lons180 - wrapTo180(lon_west)).argmin()
+        indice_east = np.abs(lons180 - wrapTo180(lon_east)).argmin()        
         lons = lons180[indice_west:indice_east]
-        variable_lon = variable[
-            :, :, np.where(lons180 == wrapTo180(lon_west))[0][0] : np.where(lons180 == wrapTo180(lon_east))[0][0]
-        ]
+        variable_lon = variable[:, :, indice_west:indice_east]
     else:
         lon_ids, lons = subset_longitudes(lons_in, lon_west, lon_east)
         variable_lon = variable[:, :, lon_ids]
