@@ -50,7 +50,7 @@ def overlay_array_on_map_withlatitudes(
     if initial:
         final_array = np.zeros((len(lats), len(lons)))
     index = np.intersect1d(lats, lats2overlay, return_indices=True)[1]
-    final_array[index[::-1], :] = array2overlay
+    final_array[index[::-1], :] += array2overlay
     return final_array
 
 
