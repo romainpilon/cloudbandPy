@@ -47,9 +47,9 @@ def blob_detection(
     # Binarize the data and fill holes
     fill_binarize_data = ndi.binary_fill_holes(input_variable < thresh_value)
     # We apply a morphological dilation: adds pixels to the boundaries of each objects
-    dilation = morphology.dilation(fill_binarize_data)
+    # dilation = morphology.dilation(fill_binarize_data) # TODO HERE 8 Jan 2024
     # -- Connected Components Labelling
-    labelled_blobs = measure.label(dilation, connectivity=2, background=0)
+    labelled_blobs = measure.label(fill_binarize_data, connectivity=2, background=0) # TODO HERE 8 Jan 2024
     """
     labelled_blobs =
     array([[ 1,  1,  1, ...,  0,  0,  0],
