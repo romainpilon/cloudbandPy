@@ -46,8 +46,6 @@ def blob_detection(
         input_variable[input_variable < 0] = 0
     # Binarize the data and fill holes
     fill_binarize_data = ndi.binary_fill_holes(input_variable < thresh_value)
-    # We apply a morphological dilation: adds pixels to the boundaries of each objects
-    # dilation = morphology.dilation(fill_binarize_data) # TODO HERE 8 Jan 2024
     # -- Connected Components Labelling
     labelled_blobs = measure.label(fill_binarize_data, connectivity=2, background=0) # TODO HERE 8 Jan 2024
     """
@@ -84,7 +82,7 @@ def blob_detection(
     for idx in [idcb[0] for idcb in cloudband_candidate]:
         labelled_candidates[labelled_blobs == idx] = idx
     #
-    return fill_binarize_data, dilation, labelled_blobs, labelled_candidates
+    return fill_binarize_data, labelled_blobs, labelled_candidates # TODO HERE 8 Jan 2024
 
 
 def candidates2class(labelled_candidates, date, resolution, lons, lats):
@@ -182,15 +180,13 @@ def detection_workflow(
             (hemispheric detection) in order to connect cloud bands that extend from 359° to 0°.
     Returns
         - fill_binarize_data: binarized data
-        - dilation: after thresholding the data, they are dilated to expand from the threshold value
-        - labelled_blobs: all the blobs that have been labelled after dilation
+        - labelled_blobs: all the blobs that have been labelled after binarization
         - labelled_candidates: candidate blobs that can be cloud bands
         - cloud_bands_map: actual cloud bands after applying the criteria
     """
     logger = logging.getLogger("cb_detection.detection_workflow")
     logger.info("Cloud band detection in progress")
     fill_binarize_data = np.zeros_like(var2process, dtype=np.uint8)
-    dilation = np.zeros_like(var2process, dtype=np.uint8)
     labelled_blobs = np.zeros_like(var2process, dtype=np.uint8)
     labelled_candidates = np.zeros_like(var2process, dtype=np.uint8)
     cloud_bands_map = np.zeros_like(var2process, dtype=np.uint8)
@@ -206,7 +202,6 @@ def detection_workflow(
     for idx, itime in enumerate(listofdates):
         (
             fill_binarize_data[idx],
-            dilation[idx],
             labelled_blobs[idx],
             labelled_candidates[idx],
         ) = blob_detection(var2process[idx], parameters, resolution, connectlongitudes)
@@ -232,7 +227,7 @@ def detection_workflow(
                 cloud_bands_map[idx] += iblob.cloud_band_array * (icb + 1)
     #
     logger.info("Cloud band detection done")
-    return fill_binarize_data, dilation, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_candidates, list_of_cloud_bands
+    return fill_binarize_data, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_candidates, list_of_cloud_bands # HERE 8 Jan 2024
 
 
 def compute_blob_area(img: np.ndarray, idx: int, resolution: np.ndarray) -> float:
