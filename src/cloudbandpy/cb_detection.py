@@ -40,37 +40,60 @@ def blob_detection(
         logger.warning(f"Use Otsu thresholding method. Threshold:{thresh_value}")
     else:
         thresh_value = parameters["OLR_THRESHOLD"]
+    
     # Sanitize input. make sure all values < 0 are all set to 0
     if not np.all((input_variable >= 0)):
         logger.warning("Some Missing Values in the Input")
         input_variable[input_variable < 0] = 0
+    
     # Binarize the data and fill holes
     fill_binarize_data = ndi.binary_fill_holes(input_variable < thresh_value)
-    # -- Connected Components Labelling
-    labelled_blobs = measure.label(fill_binarize_data, connectivity=2, background=0) # TODO HERE 8 Jan 2024
-    """
-    labelled_blobs =
-    array([[ 1,  1,  1, ...,  0,  0,  0],
-        [ 1,  1,  1, ...,  0,  0,  0],
-        [ 1,  1,  1, ...,  0,  0,  0],
-        ...,
-        [ 0,  0,  0, ...,  0,  0,  0],
-        [ 0,  0,  0, ...,  0, 26, 26],
-        [ 0,  0,  0, ..., 26, 26, 26]], dtype=int32)
-    """
-    # -- If hemispheric detection (0-360°), first and last longitudes must be connected
+    
+    # We apply a morphological dilation: adds pixels to the boundaries of each objects to merge pixel-touching clusters
+    if not parameters["grow_cluster_to_relaxed_threshold"]:
+        dilated_blobs = morphology.dilation(fill_binarize_data)
+        labelled_blobs = measure.label(dilated_blobs, connectivity=2, background=0)
+    else:
+        labelled_blobs = measure.label(fill_binarize_data, connectivity=2, background=0)
+    
     # Consolidate blob's labels
     if connectlongitudes:
         consolidated_labels = connectLongitudes(labelled_blobs)
         # copy to avoid side effects
         labelled_blobs = np.copy(consolidated_labels)
+    
     # Compute cluster areas and sort them from largest to smallest for further speed up the process
     # background (cluster)'s label = 0
-    # --> blobs_size, sorted_blobs and cloudband_candidate are like [[cluster ID, cluster area], ...]
+    # --> blobs_size, sorted_blobs and cloudband_candidate are like [[cluster ID, cluster area, can grow?], ...]
     blobs_size = [
-        [i, compute_blob_area(labelled_blobs, i, resolution=resolution)] for i in range(1, labelled_blobs.max() + 1)
+        [i, compute_blob_area(labelled_blobs, i, resolution=resolution), True]
+        for i in range(1, labelled_blobs.max() + 1)
     ]
     sorted_blobs = sorted(blobs_size, key=lambda c: c[1], reverse=True)
+    # if dilation to relaxed value is set to True, ie: each cluster will grow to a higher value of the input variable
+    if parameters["grow_cluster_to_relaxed_threshold"]:
+        logger.info(f"Relaxing OLR values from {parameters['OLR_THRESHOLD']} to {parameters['RELAXED_OLR_THRESHOLD']}")
+        grown=np.copy(labelled_blobs)
+        nb_can_grow = len(sorted_blobs)
+        i = 0
+        while(nb_can_grow > 0):
+            for cluster in sorted_blobs:
+                if cluster[2]: # if the cluster can still grow
+                    grown=grow_cluster(grown, input_variable, 1, cluster[0], parameters["RELAXED_OLR_THRESHOLD"])
+                    new_area = compute_blob_area(grown, cluster[0], resolution=resolution)
+                    # set the "can_grow" flag to False if the new area is not larger than the previous one
+                    cluster[2] = new_area > cluster[1] 
+                    # update the cluster area
+                    cluster[1] = new_area 
+            nb_can_grow = sum(cluster[2] for cluster in sorted_blobs)
+            i += 1
+        # We must then recompute the size of each blob
+        blobs_size = [
+            [i, compute_blob_area(grown, i, resolution=resolution), True]
+            for i in range(1, grown.max() + 1)
+        ]
+        sorted_blobs = sorted(blobs_size, key=lambda c: c[1], reverse=True)
+        dilated_blobs = np.copy(grown)
     # --  Filtering
     # 1) We filter blobs according to their area (subjective threshold).
     #    We filter out the largest cloud bands from the 'sorted_blobs' list according to 'cloud_band_area_threshold'
@@ -79,13 +102,51 @@ def blob_detection(
     ]
     # 2) We make an array/map of these cloud band candidates
     labelled_candidates = np.zeros_like(labelled_blobs, dtype=np.uint8)
+    
     for idx in [idcb[0] for idcb in cloudband_candidate]:
-        labelled_candidates[labelled_blobs == idx] = idx
+        labelled_candidates[dilated_blobs == idx] = idx
     #
-    return fill_binarize_data, labelled_blobs, labelled_candidates # TODO HERE 8 Jan 2024
+    return fill_binarize_data, dilated_blobs, labelled_blobs, labelled_candidates
 
 
-def candidates2class(labelled_candidates, date, resolution, lons, lats):
+def grow_cluster(ccc: np.ndarray, cloud: np.ndarray, step: int, idx: int, thresh: float) -> np.ndarray:
+    '''
+    Grow a cluster by a maximum of 'step' pixels while making sure we do not grow over regions 
+    - that are warmer than 'thresh'
+    - that already belong to another cluster
+    
+    Input: 
+        - ccc: the original cluster map (pixels value represent the ID of the cluster they belong to, 0 means no cluster)
+        - cloud: smoothed temperature image
+        - step: number of pixel to grow the cluster by
+        - idx: ID of the cluster we want to grow
+        - thresh: maximum temperature value we want to grow over
+
+    Output:
+        - res: a copy of the original clusters image with the newly grown cluster
+    '''
+    logger = logging.getLogger("cb_detection.grow_cluster")
+    # make a binary image with 0 everywhere except where the original cluster is
+    binary_map = np.zeros(ccc.shape, dtype=np.uint8)
+    binary_map[ccc==idx]=1
+    # make a mask with 0 everywhere the cluster map is not 0 (not background)
+    mask = np.ones_like(ccc, dtype=np.uint8)
+    mask[ccc!=idx] = 0
+    mask[ccc==0] = 1
+    # grow the binary mask while not growing over other clusters
+    binary_map = ndi.binary_dilation(binary_map, iterations=step, mask=mask)
+    # multiply the cloud image with the grown binary map. It keeps the temp values over the grown map, but sets everything else to 0
+    values = cloud * binary_map
+    # sets all 0 values to 9999 because we want low values
+    values[values==0]=9999
+    # make a copy of the input cluster map
+    res = np.copy(ccc)
+    # save the new shape of the cluster after being grown over empty region that are colder than the given threshold
+    res[values < thresh] = idx
+    return res
+
+
+def candidates2class(labelled_candidates, date, resolution, lons, lats) -> list:
     """
     Transform cloud band candidates into a CloudBand class
     """
@@ -180,6 +241,7 @@ def detection_workflow(
             (hemispheric detection) in order to connect cloud bands that extend from 359° to 0°.
     Returns
         - fill_binarize_data: binarized data
+        - dilated_blobs: after thresholding the data, they are dilated to expand from the threshold value
         - labelled_blobs: all the blobs that have been labelled after binarization
         - labelled_candidates: candidate blobs that can be cloud bands
         - cloud_bands_map: actual cloud bands after applying the criteria
@@ -187,6 +249,7 @@ def detection_workflow(
     logger = logging.getLogger("cb_detection.detection_workflow")
     logger.info("Cloud band detection in progress")
     fill_binarize_data = np.zeros_like(var2process, dtype=np.uint8)
+    dilated_blobs = np.zeros_like(var2process, dtype=np.uint8)
     labelled_blobs = np.zeros_like(var2process, dtype=np.uint8)
     labelled_candidates = np.zeros_like(var2process, dtype=np.uint8)
     cloud_bands_map = np.zeros_like(var2process, dtype=np.uint8)
@@ -202,6 +265,7 @@ def detection_workflow(
     for idx, itime in enumerate(listofdates):
         (
             fill_binarize_data[idx],
+            dilated_blobs[idx],
             labelled_blobs[idx],
             labelled_candidates[idx],
         ) = blob_detection(var2process[idx], parameters, resolution, connectlongitudes)
@@ -227,7 +291,7 @@ def detection_workflow(
                 cloud_bands_map[idx] += iblob.cloud_band_array * (icb + 1)
     #
     logger.info("Cloud band detection done")
-    return fill_binarize_data, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_candidates, list_of_cloud_bands # HERE 8 Jan 2024
+    return fill_binarize_data, dilated_blobs, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_candidates, list_of_cloud_bands
 
 
 def compute_blob_area(img: np.ndarray, idx: int, resolution: np.ndarray) -> float:
