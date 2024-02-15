@@ -163,19 +163,19 @@ def get_variable_lonlat_from_domain(
         lons180 = np.concatenate(
             (lons_inwrap180[len(lons_inwrap180) // 2 :], lons_inwrap180[: len(lons_inwrap180) // 2])
         )
-        variable = np.dstack((variable[:, :, len(lons_in) // 2 :], variable[:, :, : len(lons_in) // 2]))
+        variable = np.dstack((variable[..., len(lons_in) // 2 :], variable[..., : len(lons_in) // 2]))
         indice_west = [idx for idx, el in enumerate(lons180) if el == wrapTo180(lon_west)][0]
         indice_east = [idx for idx, el in enumerate(lons180) if el == wrapTo180(lon_east)][0]
         lons = lons180[indice_west:indice_east]
         variable_lon = variable[
-            :, :, np.where(lons180 == wrapTo180(lon_west))[0][0] : np.where(lons180 == wrapTo180(lon_east))[0][0]
+            ..., np.where(lons180 == wrapTo180(lon_west))[0][0] : np.where(lons180 == wrapTo180(lon_east))[0][0]
         ]
     else:
         lon_ids, lons = subset_longitudes(lons_in, lon_west, lon_east)
-        variable_lon = variable[:, :, lon_ids]
+        variable_lon = variable[..., lon_ids]
     lat_ids, lats = subset_latitudes(lats_in, lat_north, lat_south)
     #
-    variable = variable_lon[:, lat_ids, :]
+    variable = variable_lon[..., lat_ids, :]
     logger.info("Subsetting dataset on domain done")
     return variable, lons, lats
 
