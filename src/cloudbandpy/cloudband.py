@@ -22,6 +22,8 @@ class CloudBand(object):
         iscloudband: bool = True,
         connected_longitudes: bool = False,
         parents: set[str] = set(),
+        connected2pv: bool = False,
+        connected2eqwave: bool = False,
     ):
         self.cloud_band_array = cloud_band_array
         self.date_number = date_number
@@ -34,6 +36,8 @@ class CloudBand(object):
         self.angle = (regions_props.orientation * 360) / (2 * np.pi)
         # Label/id of the cloud band
         self.parents = parents
+        self.connected2pv = connected2pv
+        self.connected2eqwave = connected2eqwave
         # id = "num date _ longitude (location)"
         self.id_ = f"{self.date_number}_{round(self.latloncenter[1])}"
         #
