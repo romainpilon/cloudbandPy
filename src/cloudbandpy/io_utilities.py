@@ -217,7 +217,7 @@ def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, conf
     logger = logging.getLogger("io_utilities.make_daily_average")
     logger.info("Computation of daily average")
     daily_tmp_variable = []
-    listofdates = create_list_of_dates(config)
+    listofdates, _ = create_list_of_dates(config)
     for itime in listofdates:
         # Select indexes to make daily average
         id_start, id_end = get_ids_start_end4timecrop(itime, config, inputtime=inputtime)
@@ -284,7 +284,7 @@ def load_data_from_saved_var_files(config: dict, varname: str):
                 tmplist.append(var4oneyear)
             datalist = np.concatenate(tmplist, axis=0)
             # subset the data to chossen selected period
-            listofdates = create_list_of_dates(config)
+            listofdates, _ = create_list_of_dates(config)
             id_start = np.argwhere(listofdates == config["datetime_startdate"])[0][0]
             id_end = np.argwhere(listofdates == config["datetime_enddate"])[0][0]
             interval = int(24.0 / config["period_detection"])
@@ -305,6 +305,38 @@ def npy_save_dailyvar(config, daily_variable):
     np.save(f"{outpath}/{filename}", daily_variable)
     logger.info("Daily variable saved")
     return
+
+def create_nc_file(variable, variablename, lons, lats, unitsVar, config, filename='foo.nc'):
+    
+    # Create times
+    
+    ncfile = nc.Dataset(filename, 'w', format='NETCDF4')
+    # ncfile.createDimension('time', len(times))
+    ncfile.createDimension('longitude', len(lons))
+    ncfile.createDimension('latitude', len(lats))
+
+    time_out = ncfile.createVariable('time',np.dtype('float32').char,('time',))
+    lat_out = ncfile.createVariable('latitude',np.dtype('float32').char,('latitude',))
+    lon_out = ncfile.createVariable('longitude',np.dtype('float32').char,('longitude',))
+
+    # Time
+    if config["period_detection"] == 24:
+        time_out.unit = 'days since 1900-01-01 00:00:00.0'
+    else:
+        time_out.unit = 'hours since 1900-01-01 00:00:00.0'
+    lat_out.units = 'degrees_north'
+    lon_out.units = 'degrees_east'
+
+    variable_out = ncfile.createVariable(variablename,np.dtype('float32').char,('time','latitude','longitude'))
+    variable_out.units = unitsVar
+
+    variable_out[:,:,:]=variable[:,:,:]
+    # time_out=times[:]
+    lat_out[:]=lats[:]
+    lon_out[:]=lons[:]
+    ncfile.close() 
+    return
+
 
 
 def pickle_save_cloudbands(config, list_of_cloud_bands):

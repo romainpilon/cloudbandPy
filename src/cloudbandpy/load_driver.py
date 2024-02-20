@@ -10,7 +10,7 @@ from .io_utilities import (
     load_data_from_saved_var_files,
     load_ymlfile,
 )
-from .time_utilities import create_list_of_dates
+# from .time_utilities import create_list_of_dates
 from .misc import compute_resolution
 
 logging_setup()
@@ -20,8 +20,6 @@ def run_load_data(config: dict):
     logger.info("Loading data and parameters ")
     # Loading of the parameters to set the specific parameters for the studied hemisphere
     parameters = load_ymlfile(config["parameters_file"])
-    # Create the list of dates
-    listofdates = create_list_of_dates(config)
     # Load data from netcdf files or from saved files
     if not config["load_saved_files"]:
         # Load file(s) and variable: open and load OLR from ERA5 netcdf file(s)
@@ -44,4 +42,4 @@ def run_load_data(config: dict):
         listofdates = listofdates[index_djfm]
         variable2process = variable2process[index_djfm]
 
-    return variable2process, parameters, listofdates, lats, lons, resolution
+    return variable2process, parameters, lats, lons, resolution

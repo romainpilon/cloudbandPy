@@ -1,6 +1,6 @@
 import datetime as dt
 import logging
-import pandas
+import pandas as pd
 import netCDF4 as nc
 import numpy as np
 from typing import Any
@@ -17,7 +17,7 @@ def convert_num2date(time_in) -> Any:
     )
 
 
-def create_list_of_dates(config: dict) -> pandas.date_range:
+def create_list_of_dates(config: dict) -> pd.date_range:
     """
     Create a list of days ranging from the start date to the end date
     Handles "day is out of range for month" problem
@@ -37,8 +37,14 @@ def create_list_of_dates(config: dict) -> pandas.date_range:
     else:
         logger.error("Detection period must be 24h, 12h, 6h, 3h or 1h!")
         sys.exit(1)
+    
+    datetime_range = pd.date_range(
+        start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq
+    )
+    datetime_array = np.array(datetime_range.to_pydatetime())
+ 
     try:
-        return pandas.date_range(start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq)
+        return datetime_range, datetime_array
     except ValueError:
         logger.warning("ValueError: day is out of range for month")
         config["datetime_enddate"] = dt.datetime.strptime(config["datetime_enddate"], "%Y-%m-%d %H:%M:%S") - dt.timedelta(days=1)
