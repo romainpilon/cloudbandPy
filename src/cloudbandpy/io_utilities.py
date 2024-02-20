@@ -16,7 +16,7 @@ import yaml
 
 from .cloudband import CloudBand
 from .misc import is_decreasing, convert_olr_in_wm2, wrapTo180
-from .time_utilities import add_startend_datetime2config, create_list_of_dates
+from .time_utilities import add_startend_datetime2config, convert_date2num, create_list_of_dates
 
 
 def logging_setup():
@@ -306,18 +306,20 @@ def npy_save_dailyvar(config, daily_variable):
     logger.info("Daily variable saved")
     return
 
-def create_nc_file(variable, variablename, lons, lats, unitsVar, config, filename='foo.nc'):
-    
+
+def create_nc_file(variable, variablename, lons, lats, unitsVar, config, filename='./foo.nc'):
     # Create times
+    _, array_of_dates = create_list_of_dates(config)
+    times = convert_date2num(array_of_dates)
     
     ncfile = nc.Dataset(filename, 'w', format='NETCDF4')
-    # ncfile.createDimension('time', len(times))
+    ncfile.createDimension('time', len(times))
     ncfile.createDimension('longitude', len(lons))
     ncfile.createDimension('latitude', len(lats))
 
-    time_out = ncfile.createVariable('time',np.dtype('float32').char,('time',))
-    lat_out = ncfile.createVariable('latitude',np.dtype('float32').char,('latitude',))
-    lon_out = ncfile.createVariable('longitude',np.dtype('float32').char,('longitude',))
+    time_out = ncfile.createVariable('time', np.float32, ('time',))
+    lat_out = ncfile.createVariable('latitude', np.float32, ('latitude',))
+    lon_out = ncfile.createVariable('longitude', np.float32, ('longitude',))
 
     # Time
     if config["period_detection"] == 24:
@@ -327,13 +329,14 @@ def create_nc_file(variable, variablename, lons, lats, unitsVar, config, filenam
     lat_out.units = 'degrees_north'
     lon_out.units = 'degrees_east'
 
-    variable_out = ncfile.createVariable(variablename,np.dtype('float32').char,('time','latitude','longitude'))
+    variable_out = ncfile.createVariable(variablename, np.float32, ('time', 'latitude', 'longitude'))
     variable_out.units = unitsVar
+    variable_out[:, :, :] = variable[:, :, :]
 
-    variable_out[:,:,:]=variable[:,:,:]
-    # time_out=times[:]
-    lat_out[:]=lats[:]
-    lon_out[:]=lons[:]
+    time_out = times[:]
+    lat_out[:] = lats[:]
+    lon_out[:] = lons[:]
+    
     ncfile.close() 
     return
 
