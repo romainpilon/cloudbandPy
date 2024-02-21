@@ -7,7 +7,14 @@ The cloudbandPy package detect tropical-extratropical cloud bands. This software
 This is currently the development software used for research.
 
 ## 1. Installation
-Clone cloudbandPy
+To install, type:
+
+```bash
+pip install cloudbandpy
+```
+
+Additionnaly, you can clone cloudbandPy
+
 
 ```bash
 git clone https://github.com/romainpilon/cloudbandPy.git
@@ -23,7 +30,8 @@ Then install the package with
 pip install -e .
 ```
 
-Additionnaly, a conda environment.yml file is provided to create a conda virtual environment containing all librairies required. Before installing the package with pip, you may run
+
+Optionally, a conda environment.yml file is provided to create a conda virtual environment containing all librairies required. Before installing the package with pip, you may run
 
 ```bash
 conda env create --file=environment.yml
