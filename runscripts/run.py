@@ -19,6 +19,7 @@ from cloudbandpy.io_utilities import (
     pickle_save_cloudbands,
 )
 from cloudbandpy.misc import parse_arguments
+from cloudbandpy.time_utilities import create_list_of_dates
 from cloudbandpy.tracking import tracking, compute_density, plot_tracking_on_map
 
 logging_setup()
@@ -27,7 +28,8 @@ logger = logging.getLogger(__name__)
 
 def run(config: dict):
     # Load data and parameters
-    variable2process, parameters, listofdates, lats, lons, resolution = run_load_data(config)
+    listofdates = create_list_of_dates(config)
+    variable2process, parameters, lats, lons, resolution = run_load_data(config)
     # Cloud band detection
     (
         fill_binarize_data,

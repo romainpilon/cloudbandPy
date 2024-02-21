@@ -40,15 +40,22 @@ def create_list_of_dates(config: dict) -> pd.date_range:
     
     datetime_range = pd.date_range(
         start=config["datetime_startdate"], end=config["datetime_enddate"], freq=freq
-    )
-    datetime_array = np.array(datetime_range.to_pydatetime())
- 
+    ) 
     try:
-        return datetime_range, datetime_array
+        return datetime_range
     except ValueError:
         logger.warning("ValueError: day is out of range for month")
         config["datetime_enddate"] = dt.datetime.strptime(config["datetime_enddate"], "%Y-%m-%d %H:%M:%S") - dt.timedelta(days=1)
         return create_list_of_dates(config)
+
+
+def create_array_of_times(config: dict) -> np.ndarray:
+    """
+    Transform a list of pandas datetime to an array of python datetime
+    """
+    datetime_range = create_list_of_dates(config)
+    datetime_array = np.array(datetime_range.to_pydatetime())
+    return datetime_array
 
 
 def add_startend_datetime2config(config: dict) -> tuple:
