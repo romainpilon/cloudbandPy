@@ -104,12 +104,26 @@ def candidates2class(labelled_candidates, date, resolution, lons, lats):
         connected_longitudes = False
         if wrapTo360(np.nanmin(cb_lon)) == 0.0 and wrapTo360(np.nanmax(cb_lon)) > 250.0:
             connected_longitudes = True
+        # Geometric properties are computed here and then incorporated into the class
+        regions_props = measure.regionprops(icloudband)[0] # return a list, here we've got only one cloud band --> [0]
+        # angle between the minor axis and the horizontal, at the centroid
+        angle = (regions_props.orientation * 360) / (2 * np.pi)
+        # center of ellipse around cloud band
+        centroid = regions_props.centroid
+        lon_centroid, lat_centroid = (
+            lons[int(centroid[1])].item(),
+            lats[int(centroid[0])].item(),
+        )
+        # Setting up cloud band object
         cloud = CloudBand(
             cloud_band_array=icloudband,
             date_number=cb_num_date,
             area=cb_area,
             lats=cb_lat,
             lons=cb_lon,
+            angle=angle,
+            lon_centroid=lon_centroid,
+            lat_centroid=lat_centroid,
             iscloudband=False,
             connected_longitudes=connected_longitudes,
         )
@@ -117,7 +131,7 @@ def candidates2class(labelled_candidates, date, resolution, lons, lats):
     return list_candidates
 
 
-def filter_blobs2cloudbands(list_candidates: list, latitudes: np.ndarray, parameters: dict) -> np.ndarray:
+def filter_blobs2cloudbands(list_candidates: list, parameters: dict) -> np.ndarray:
     """
     For one time, select the cloud bands from candidates.
     Cloud bands are filter out from candidates using different criterion:
@@ -133,7 +147,7 @@ def filter_blobs2cloudbands(list_candidates: list, latitudes: np.ndarray, parame
     #
     list_of_cloud_bands = []
     for iblob in list_candidates:
-        blob_center_lat = latitudes[round(iblob.latloncenter[0])]
+        blob_center_lat = iblob.lat_centroid
         blob_max_lat = np.nanmax(iblob.lats)
         blob_min_lat = np.nanmin(iblob.lats)
         # we want to compare the long axis of the blob's ellipse
@@ -221,7 +235,6 @@ def detection_workflow(
         list_of_cloud_bands.append(
             filter_blobs2cloudbands(
                 list_of_candidates[idx],
-                latitudes,
                 parameters=parameters,
             )
         )
