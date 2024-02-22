@@ -150,19 +150,16 @@ def plot_tracking_on_map(
         ax.coastlines(color="#474747", zorder=0)
         # links between clouds
         for cloud in list_of_cloud_bands[inc]:
-            y0, x0 = cloud.latloncenter
-            lon0 = lons[round(x0)]
-            lat0 = lats[round(y0)]
+            # y0, x0 = cloud.lon_centroid
+            lon0 = cloud.lon_centroid
+            lat0 = cloud.lat_centroid
             xyA = ccrs.PlateCarree(central_longitude=180).transform_point(lon0, lat0, ccrs.PlateCarree())
-            # ax.plot(cloud.latloncenter[1], cloud.latloncenter[0], ".g", markersize=10)
             for parent_id in cloud.parents:
                 parent = findCloud(list_of_cloud_bands, parent_id)
-                y1, x1 = parent.latloncenter
-                lon1 = lons[round(x1)]
-                lat1 = lats[round(y1)]
+                lon1 = parent.lon_centroid
+                lat1 = parent.lat_centroid
                 xyB = ccrs.PlateCarree(central_longitude=180).transform_point(lon1, lat1, ccrs.PlateCarree())
                 ## Add a point at the center of mass
-                # ax.plot(lons[round(x0)], lats[round(y0)], ".g", markersize=10, transform=ccrs.PlateCarree())
                 con = ConnectionPatch(
                     xyA=xyA,
                     xyB=xyB,
@@ -207,12 +204,12 @@ def plot_pix(list_of_cloud_bands: list):
             ax.imshow(map, cmap="tab20_r")
         # links between clouds
         for cloud in list_of_cloud_bands[inc]:
-            # ax.plot(cloud.latloncenter[1], cloud.latloncenter[0], ".g", markersize=10)
+            # ax.plot(cloud.lon_centroid, cloud.lat_centroid, ".g", markersize=10)
             for parent_id in cloud.parents:
                 parent = findCloud(list_of_cloud_bands, parent_id)
                 con = ConnectionPatch(
-                    xyA=cloud.latloncenter[::-1],
-                    xyB=parent.latloncenter[::-1],
+                    xyA=(cloud.lon_centroid,cloud.lat_centroid),
+                    xyB=(parent.lon_centroid,parent.lat_centroid),
                     coordsA="data",
                     coordsB="data",
                     axesA=ax,
