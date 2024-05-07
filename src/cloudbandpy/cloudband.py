@@ -18,7 +18,7 @@ class CloudBand(object):
         area: float,
         lats: np.ndarray,
         lons: np.ndarray,
-        date_number: np.int32,
+        date: np.int32,
         iscloudband: bool = True,
         connected_longitudes: bool = False,
         parents: set[str] = set(),
@@ -26,7 +26,7 @@ class CloudBand(object):
         connected2eqwave: bool = False,
     ):
         self.cloud_band_array = cloud_band_array
-        self.date_number = date_number
+        self.date = date
         self.area = area
         # return a list, here we've got only one cloud band --> [0]
         regions_props = measure.regionprops(self.cloud_band_array)[0]
@@ -39,7 +39,7 @@ class CloudBand(object):
         self.connected2pv = connected2pv
         self.connected2eqwave = connected2eqwave
         # id = "num date _ longitude (location)"
-        self.id_ = f"{self.date_number}_{round(self.latloncenter[1])}"
+        self.id_ = int(f"{self.date}_{round(self.latloncenter[1])}")
         #
         self.lats = lats
         self.lons = lons

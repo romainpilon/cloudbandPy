@@ -4,6 +4,7 @@
 Functions to detect cloud bands from outgoing longwave radiations
 """
 
+from datetime import datetime as dt
 import logging
 import numpy as np
 from scipy import ndimage as ndi
@@ -95,9 +96,11 @@ def candidates2class(labelled_candidates, date, resolution, lons, lats):
     list_candidates = []
     for ilabel in set(labelled_candidates[np.where(labelled_candidates != 0)]):
         icloudband = np.zeros_like(labelled_candidates, dtype=np.uint8)
+        # Binarize array into 0-1 array
         icloudband[np.where(labelled_candidates == ilabel)] = 1
         cb_area = compute_blob_area(icloudband, 1, resolution)
-        cb_num_date = convert_date2num(date)
+        # tranform panda timestamp date into integer
+        cb_date = int(date.strftime("%Y%m%d%H%M%S"))
         cb_lon, cb_lat = get_cloudband_latlon(icloudband, lons, lats)
         # If the cloud band crosses the edges of the (worldwide) domain,
         # the longitudes on the longitudinal edges are connected, we flag the candidate as such
@@ -106,7 +109,7 @@ def candidates2class(labelled_candidates, date, resolution, lons, lats):
             connected_longitudes = True
         cloud = CloudBand(
             cloud_band_array=icloudband,
-            date_number=cb_num_date,
+            date=cb_date,
             area=cb_area,
             lats=cb_lat,
             lons=cb_lon,
@@ -193,7 +196,7 @@ def detection_workflow(
     dilation = np.zeros_like(var2process, dtype=np.uint8)
     labelled_blobs = np.zeros_like(var2process, dtype=np.uint8)
     labelled_candidates = np.zeros_like(var2process, dtype=np.uint8)
-    cloud_bands_map = np.zeros_like(var2process, dtype=np.uint8)
+    cloud_bands_map = np.zeros_like(var2process, dtype=np.uint64)
     list_of_candidates = []
     list_of_cloud_bands = []
     connectlongitudes = False
@@ -213,7 +216,11 @@ def detection_workflow(
         # Objectify the cloud band candidates
         list_of_candidates.append(
             candidates2class(
-                labelled_candidates[idx], date=itime, resolution=resolution, lons=longitudes, lats=latitudes
+                labelled_candidates[idx],
+                date=itime,
+                resolution=resolution,
+                lons=longitudes,
+                lats=latitudes
             )
         )
         # Filtering out the cloud bands according the angle and "crossing the tropical line" criterion
@@ -228,8 +235,8 @@ def detection_workflow(
         # Array of all the cloud bands for one time
         for icb, iblob in enumerate(list_of_cloud_bands[idx]):
             if iblob:
-                # cloud_band_array = 1 -> set and increment the label of each cloud band
-                cloud_bands_map[idx] += iblob.cloud_band_array * (icb + 1)
+                cloud_bands_map[idx] += iblob.cloud_band_array * iblob.id_
+
     #
     logger.info("Cloud band detection done")
     return fill_binarize_data, dilation, labelled_blobs, labelled_candidates, cloud_bands_map, list_of_candidates, list_of_cloud_bands

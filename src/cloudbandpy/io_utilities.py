@@ -307,7 +307,7 @@ def npy_save_dailyvar(config, daily_variable):
     return
 
 
-def write_cloud_bands_to_netcdf(list_of_cloud_bands, lons, lats, config):
+def write_cloud_bands_to_netcdf(list_of_cloud_bands: list, cloud_band_array: np.ndarray, lons: np.ndarray, lats: np.ndarray, config: dict):
     # Initialize the netCDF file
     year = config['datetime_startdate'].year
     filename = f"cloud_bands_{year}.nc"
@@ -325,29 +325,25 @@ def write_cloud_bands_to_netcdf(list_of_cloud_bands, lons, lats, config):
     time_out = rootgrp.createVariable(
         varname="time", dimensions=("time",), datatype="f8"
     )
-    # Set the units for the time variable
-    # if config["period_detection"] == 24:
     time_out.units = "hours since 1900-01-01 00:00:00.0"
-    # else:
-        # time_out.units = "hours since 1900-01-01 00:00:00.0"
     time_out[:] = date_numbers
     
     # Variables
-    area = rootgrp.createVariable("area","f4",("object"), fill_value=-9999)
+    area = rootgrp.createVariable("area","f4",("time", "object"), fill_value=-9999)
     area.units = 'km2'
 
-    latcenters = rootgrp.createVariable("latcenter","f4",("object"), fill_value=-9999)
-    latcenters.description = 'Latitude of centroid'
+    latcenters = rootgrp.createVariable("latcenter","f4",("time", "object"), fill_value=-9999)
+    latcenters.description = 'Latitude of centroid around cloud band'
 
-    loncenters = rootgrp.createVariable("loncenter","f4",("object"), fill_value=-9999)
-    loncenters.description = 'Latitude of centroid'
+    loncenters = rootgrp.createVariable("loncenter","f4",("time", "object"), fill_value=-9999)
+    loncenters.description = 'Latitude of centroid around cloud band'
 
-    angle = rootgrp.createVariable("angle","f4",("object"), fill_value=-9999)
+    angle = rootgrp.createVariable("angle","f4",("time", "object"), fill_value=-9999)
     angle.description = "Angle between long axis of ellipse around cloud band and parallels"
     angle.units = "degrees"
 
-    cbid = rootgrp.createVariable("id","S10",("object"), fill_value=b'-9999')
-    cbid.description = "ids of cloud bands"
+    cbid = rootgrp.createVariable("id", "i8", ("time", "object"), fill_value=-9999)
+    cbid.description = "ids of cloud bands. yyyymmddhhMMSS_latitude_of_centroid"
 
     lat_out = rootgrp.createVariable('latitude', np.float32, ('latitude',))
     lon_out = rootgrp.createVariable('longitude', np.float32, ('longitude',))
@@ -356,19 +352,19 @@ def write_cloud_bands_to_netcdf(list_of_cloud_bands, lons, lats, config):
     lat_out[:] = lats[:]
     lon_out[:] = lons[:]
     
-    cloud_band_mask = rootgrp.createVariable("cloud_band_mask","i1",("time","object", "latitude", "longitude"), fill_value=-9999)
+    cloud_band_mask = rootgrp.createVariable("cloud_band_mask","f4",("time", "latitude", "longitude"), fill_value=-9999)
     cloud_band_mask.description = "Mask of cloud bands"
     # loop over the list of lists of objects and store the data
-    for day_index, day in enumerate(list_of_cloud_bands):
-        for object_index, cloud_band in enumerate(day):
+    for day_index, cbdays in enumerate(list_of_cloud_bands):
+        # Mask
+        cloud_band_mask[day_index, :, :] = cloud_band_array[day_index, :, :]
+        for object_index, cloud_band in enumerate(cbdays):
             # date_number[day_index, object_index] = cloud_band.date_number
-            area[object_index] = cloud_band.area
-            latcenters[object_index] = cloud_band.latloncenter[0]
-            loncenters[object_index] = cloud_band.latloncenter[1]
-            angle[object_index] = cloud_band.angle
-            cbid[object_index] = cloud_band.id_
-            # Mask
-            cloud_band_mask[day_index, object_index, :, :] = cloud_band.cloud_band_array
+            area[day_index, object_index] = cloud_band.area
+            latcenters[day_index, object_index] = cloud_band.latloncenter[0]
+            loncenters[day_index, object_index] = cloud_band.latloncenter[1]
+            angle[day_index, object_index] = cloud_band.angle
+            cbid[day_index, object_index] = cloud_band.id_
 
     rootgrp.close()
     return
