@@ -42,9 +42,10 @@ parameters_file: './cloudbandPy/parameters/parameters_southhemisphere.yml'
 saved_dirpath: './cloud_band_files' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of the variable
-save_listcloudbands: True # list containing lists of cloud band (1 list per day)
+save_listcloudbands: True # Pickle bin files of list containing lists of cloud band (1 list per day)
+save_cloudbands_netcdf: False
 
-# To load files saved in saved_dirpath and not load files containing raw data
+# To load pickle bin files saved in saved_dirpath and not load files containing raw data
 load_saved_files: False
 
 

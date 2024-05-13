@@ -307,10 +307,18 @@ def npy_save_dailyvar(config, daily_variable):
     return
 
 
-def write_cloud_bands_to_netcdf(list_of_cloud_bands: list, cloud_band_array: np.ndarray, lons: np.ndarray, lats: np.ndarray, config: dict):
+def write_cloud_bands_to_netcdf(
+    list_of_cloud_bands: list,
+    cloud_band_array: np.ndarray,
+    lons: np.ndarray,
+    lats: np.ndarray,
+    config: dict,
+):
     # Initialize the netCDF file
     year = config['datetime_startdate'].year
-    filename = f"cloud_bands_{year}.nc"
+    outpath = config["saved_dirpath"]
+    os.makedirs(outpath, exist_ok=True)
+    filename = f"{outpath}/cloud_bands_{config['startdate']}-{config['enddate']}-{config['domain']}.nc"
     rootgrp = nc.Dataset(filename, "w", format="NETCDF4")
     
     # Create dimensions
