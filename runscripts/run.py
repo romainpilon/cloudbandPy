@@ -17,6 +17,7 @@ from cloudbandpy.io_utilities import (
     logging_setup,
     load_ymlfile,
     pickle_save_cloudbands,
+    write_cloud_bands_to_netcdf,
 )
 from cloudbandpy.misc import parse_arguments
 from cloudbandpy.time_utilities import create_list_of_dates
@@ -55,6 +56,8 @@ def run(config: dict):
     # Save cloud bands
     if config["save_listcloudbands"]:
         pickle_save_cloudbands(config, list_of_cloud_bands)
+    if config["save_cloudbands_netcdf"]:
+        write_cloud_bands_to_netcdf(list_of_cloud_bands, cloud_bands_over_time, lons, lats, config=config)
     return (
         listofdates,
         lats,

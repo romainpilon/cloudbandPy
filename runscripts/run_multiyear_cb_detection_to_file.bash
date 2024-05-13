@@ -11,14 +11,14 @@
 module purge
 module load gcc python
 module load geos proj
-source ./ProdEnvPy3.9/bin/activate
+source /users/rpilon/codes/unil/cloudbandPy/myenv/bin/activate
 
 DIR=/users/rpilon
 cd "${DIR}" || return
 
 # Set paths
 # for code source
-srcdir=./cloudbandPy
+srcdir=/users/rpilon/codes/unil/cloudbandPy
 # for temporary config files. we create one config file per year to save memory (instead of loading 43 years of reanalysis)
 tmpdir_config=/users/rpilon/tmp
 [[ ! -d "${tmpdir_config}" ]] && mkdir "${tmpdir_config}"
@@ -32,7 +32,7 @@ for domain in "${domains[@]}"; do
     configname=config_cbworkflow_"${domain}"
     configpath="${srcdir}"/config/"${configname}".yml
 
-    years=({1959..2021..1})
+    years=({1959..2022..1})
 
     echo "${years["${SLURM_ARRAY_TASK_ID}"]}"
     outfil="${tmpdir_config}"/"${configname}"_"${years["${SLURM_ARRAY_TASK_ID}"]}".yml
