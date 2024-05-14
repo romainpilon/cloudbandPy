@@ -314,13 +314,12 @@ def write_cloud_bands_to_netcdf(
     lats: np.ndarray,
     config: dict,
 ):
+    logger = logging.getLogger("io_utilities.write_cloud_bands_to_netcdf")
     # Initialize the netCDF file
-    year = config['datetime_startdate'].year
     outpath = config["saved_dirpath"]
     os.makedirs(outpath, exist_ok=True)
-    filename = f"{outpath}/cloud_bands_{config['startdate'][:8]}-{config['enddate'][:8]}-{config['domain']}.nc"
+    filename = f"{outpath}/cloud_bands_{config['datetime_startdate'].strftime('%Y%m%d')}-{config['datetime_enddate'].strftime('%Y%m%d')}-{config['domain']}.nc"
     rootgrp = nc.Dataset(filename, "w", format="NETCDF4")
-    
     # Create dimensions
     time_dim = rootgrp.createDimension("time", None)  # unlimited dimension (can append data)
     object_dim = rootgrp.createDimension("object", None)  # unlimited dimension
