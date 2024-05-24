@@ -1,10 +1,8 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
 
-import datetime as dt
 import numpy as np
 import pickle
-from skimage import measure
 
 
 class CloudBand(object):
@@ -38,7 +36,7 @@ class CloudBand(object):
         self.parents = parents
         self.connected2pv = connected2pv
         self.connected2eqwave = connected2eqwave
-        # id = "num date _ longitude (location)"
+        # id = "date _ longitude (location)"
         self.id_ = int(f"{self.date}_{round(self.latloncenter[1])}")
         #
         self.lats = lats
@@ -58,7 +56,7 @@ class CloudBand(object):
         """
         with open(filename, "rb") as f:
             data = pickle.load(f)
-            return cls(
+             return cls(
                 data["cloud_band_array"],
                 data["area"],
                 data["lats"],
@@ -96,7 +94,7 @@ class CloudBand(object):
             filename: Output file name (str)
         """
         with open(filename, "wb") as f:
-            pickle.dump(
+             pickle.dump(
                 {
                     "cloud_band_array": self.cloud_band_array,
                     "area": self.area,
