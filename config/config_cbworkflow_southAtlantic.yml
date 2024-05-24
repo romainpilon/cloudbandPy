@@ -41,9 +41,9 @@ parameters_file: '/users/rpilon/codes/unil/cloudbandPy/parameters/parameters_sou
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
 saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/data/cloud_band_files' # directory where files will be saved
 
-save_dailyvar: False # save daily mean of te variable
+save_dailyvar: False # save daily mean of the input variable
 save_listcloudbands: False # Pickle bin files of list containing lists of cloud band (1 list per day)
-save_cloudbands_netcdf: True
+save_cloudbands_netcdf: True # netCDF4 files containing cloud band masks and cloud band characteristics
 
 # To load pickle bin files saved in saved_dirpath and not load files containing raw data
 load_saved_files: False
