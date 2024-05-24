@@ -16,10 +16,7 @@ class CloudBand(object):
         area: float,
         lats: np.ndarray,
         lons: np.ndarray,
-        angle: np.float32,
-        lat_centroid: np.float32,
-        lon_centroid: np.float32,
-        date_number: np.int32,
+        date: np.int32,
         iscloudband: bool = True,
         connected_longitudes: bool = False,
         parents: set[str] = set(),
@@ -27,18 +24,20 @@ class CloudBand(object):
         connected2eqwave: bool = False,
     ):
         self.cloud_band_array = cloud_band_array
-        self.date_number = date_number
-        
-        self.angle = angle
-        self.lat_centroid = lat_centroid
-        self.lon_centroid = lon_centroid
+        self.date = date
         self.area = area
+        # return a list, here we've got only one cloud band --> [0]
+        regions_props = measure.regionprops(self.cloud_band_array)[0]
+        # center of ellipse around cloud band
+        self.latloncenter = regions_props.centroid
+        # angle between the minor axis and the horizontal, at the centroid
+        self.angle = (regions_props.orientation * 360) / (2 * np.pi)
         # Label/id of the cloud band
         self.parents = parents
         self.connected2pv = connected2pv
         self.connected2eqwave = connected2eqwave
-        # id = "num date _ longitude (location)"
-        self.id_ = f"{self.date_number}_{self.lon_centroid}"
+        # id = "date _ longitude (location)"
+        self.id_ = int(f"{self.date}_{round(self.latloncenter[1])}")
         #
         self.lats = lats
         self.lons = lons
@@ -57,20 +56,15 @@ class CloudBand(object):
         """
         with open(filename, "rb") as f:
             data = pickle.load(f)
-            return cls(
+             return cls(
                 data["cloud_band_array"],
                 data["area"],
                 data["lats"],
                 data["lons"],
-                data["angle"],
-                data["lat_centroid"],
-                data["lon_centroid"],
-                data["date_number"],
+                data["date"],
                 data["iscloudband"],
                 data["connected_longitudes"],
                 data["parents"],
-                data["connected2pv"],
-                data["connected2eqwave"],
             )
 
     @classmethod
@@ -86,15 +80,10 @@ class CloudBand(object):
             d["area"],
             d["lats"],
             d["lons"],
-            d["angle"],
-            d["lat_centroid"],
-            d["lon_centroid"],
-            d["date_number"],
+            d["date"],
             d["connected_longitudes"],
             d["iscloudband"],
             d["parents"],
-            d["connected2pv"],
-            d["connected2eqwave"],
         )
 
     def tofile(self, filename):
@@ -105,21 +94,16 @@ class CloudBand(object):
             filename: Output file name (str)
         """
         with open(filename, "wb") as f:
-            pickle.dump(
+             pickle.dump(
                 {
                     "cloud_band_array": self.cloud_band_array,
                     "area": self.area,
                     "lats": self.lats,
                     "lons": self.lons,
-                    "angle": self.angle,
-                    "lat_centroid": self.lat_centroid,
-                    "lon_centroid": self.lon_centroid,
-                    "date_number": self.date_number,
+                    "date": self.date_number,
                     "connected_longitudes": self.connected_longitudes,
                     "iscloudband": self.iscloudband,
                     "parents": self.parents,
-                    "connected2pv": self.connected2pv,
-                    "connected2eqwave": self.connected2eqwave,
                 },
                 f,
             )
@@ -135,15 +119,10 @@ class CloudBand(object):
             "area": self.area,
             "lats": self.lats,
             "lons": self.lons,
-            "angle": self.angle,
-            "lat_centroid": self.lat_centroid,
-            "lon_centroid": self.lon_centroid,
-            "date_number": self.date_number,
+            "date": self.date,
             "connected_longitudes": self.connected_longitudes,
             "iscloudband": self.iscloudband,
             "parents": self.parents,
-            "connected2pv": self.connected2pv,
-            "connected2eqwave": self.connected2eqwave,
         }
 
 

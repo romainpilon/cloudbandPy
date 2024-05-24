@@ -307,37 +307,73 @@ def npy_save_dailyvar(config, daily_variable):
     return
 
 
-def create_nc_file(variable, variablename, lons, lats, unitsVar, config, filename='./foo.nc'):
-    # Create times
-    array_of_dates = create_array_of_times(config)
-    times = convert_date2num(array_of_dates)
+def write_cloud_bands_to_netcdf(
+    list_of_cloud_bands: list,
+    cloud_band_array: np.ndarray,
+    lons: np.ndarray,
+    lats: np.ndarray,
+    config: dict,
+):
+    logger = logging.getLogger("io_utilities.write_cloud_bands_to_netcdf")
+    # Initialize the netCDF file
+    outpath = config["saved_dirpath"]
+    os.makedirs(outpath, exist_ok=True)
+    filename = f"{outpath}/cloud_bands_{config['datetime_startdate'].strftime('%Y%m%d')}-{config['datetime_enddate'].strftime('%Y%m%d')}-{config['domain']}.nc"
+    rootgrp = nc.Dataset(filename, "w", format="NETCDF4")
+    # Create dimensions
+    time_dim = rootgrp.createDimension("time", None)  # unlimited dimension (can append data)
+    object_dim = rootgrp.createDimension("object", None)  # unlimited dimension
+    rootgrp.createDimension('longitude', len(lons))
+    rootgrp.createDimension('latitude', len(lats))
+
+    dates = create_array_of_times(config)
+    date_numbers = nc.date2num(dates, "hours since 1900-01-01 00:00:00.0", calendar="gregorian")
+
+    time_out = rootgrp.createVariable(
+        varname="time", dimensions=("time",), datatype="f8"
+    )
+    time_out.units = "hours since 1900-01-01 00:00:00.0"
+    time_out[:] = date_numbers
     
-    ncfile = nc.Dataset(filename, 'w', format='NETCDF4')
-    ncfile.createDimension('time', len(times))
-    ncfile.createDimension('longitude', len(lons))
-    ncfile.createDimension('latitude', len(lats))
+    # Variables
+    area = rootgrp.createVariable("area","f4",("time", "object"), fill_value=-9999)
+    area.units = 'km2'
 
-    time_out = ncfile.createVariable('time', np.float32, ('time',))
-    lat_out = ncfile.createVariable('latitude', np.float32, ('latitude',))
-    lon_out = ncfile.createVariable('longitude', np.float32, ('longitude',))
+    latcenters = rootgrp.createVariable("latcenter","f4",("time", "object"), fill_value=-9999)
+    latcenters.description = 'Latitude of centroid around cloud band'
 
-    # Time
-    if config["period_detection"] == 24:
-        time_out.unit = 'days since 1900-01-01 00:00:00.0'
-    else:
-        time_out.unit = 'hours since 1900-01-01 00:00:00.0'
+    loncenters = rootgrp.createVariable("loncenter","f4",("time", "object"), fill_value=-9999)
+    loncenters.description = 'Latitude of centroid around cloud band'
+
+    angle = rootgrp.createVariable("angle","f4",("time", "object"), fill_value=-9999)
+    angle.description = "Angle between long axis of ellipse around cloud band and parallels"
+    angle.units = "degrees"
+
+    cbid = rootgrp.createVariable("id", "i8", ("time", "object"), fill_value=-9999)
+    cbid.description = "ids of cloud bands. yyyymmddhhMMSS_latitude_of_centroid"
+
+    lat_out = rootgrp.createVariable('latitude', np.float32, ('latitude',))
+    lon_out = rootgrp.createVariable('longitude', np.float32, ('longitude',))
     lat_out.units = 'degrees_north'
     lon_out.units = 'degrees_east'
-
-    variable_out = ncfile.createVariable(variablename, np.float32, ('time', 'latitude', 'longitude'))
-    variable_out.units = unitsVar
-    variable_out[:, :, :] = variable[:, :, :]
-
-    time_out = times[:]
     lat_out[:] = lats[:]
     lon_out[:] = lons[:]
     
-    ncfile.close() 
+    cloud_band_mask = rootgrp.createVariable("cloud_band_mask","f4",("time", "latitude", "longitude"), fill_value=-9999)
+    cloud_band_mask.description = "Mask of cloud bands"
+    # loop over the list of lists of objects and store the data
+    for day_index, cbdays in enumerate(list_of_cloud_bands):
+        # Mask
+        cloud_band_mask[day_index, :, :] = cloud_band_array[day_index, :, :]
+        for object_index, cloud_band in enumerate(cbdays):
+            # date_number[day_index, object_index] = cloud_band.date_number
+            area[day_index, object_index] = cloud_band.area
+            latcenters[day_index, object_index] = cloud_band.latloncenter[0]
+            loncenters[day_index, object_index] = cloud_band.latloncenter[1]
+            angle[day_index, object_index] = cloud_band.angle
+            cbid[day_index, object_index] = cloud_band.id_
+
+    rootgrp.close()
     return
 
 

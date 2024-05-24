@@ -62,6 +62,7 @@ Default settings:
 - Input data are 3-hourly ERA5 OLR data with filenames written as such `top_net_thermal_radiation_yyyy.nc` where `yyyy` is the year.
 - The detection period is 24 hours.
 - Output files containing cloud bands are written in a specific directory that will be created in the current directory.
+- Cloud band masks and characteristics are written to netCDF4 files and stored in a user defined directory.
 - Figures will be saved in a specific directory that will be created in the current directory.
 
 Example run scripts are located in the `runscripts` directories.
