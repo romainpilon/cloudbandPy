@@ -17,7 +17,7 @@ lat_north: 50
 lat_south: 8
 
 # Input files directory
-clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/ERA5/netcdf/3hourly/surface_level/'
+clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
 # calculate daily mean of the input variable for detection
 qd_var: True
@@ -36,10 +36,10 @@ ycoord_name: 'latitude'
 select_djfm: False
 
 # Parameters file for cloud band detection
-parameters_file: '/users/rpilon/codes/unil/cloudbandPy/parameters/parameters_northhemisphere.yml'
+parameters_file: './cloudbandPy/parameters/parameters_northhemisphere.yml'
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
-saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/data/cloud_band_files' # directory where files will be saved
+saved_dirpath: './cloud_band_files' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of the input variable
 save_listcloudbands: False # Pickle bin files of list containing lists of cloud band (1 list per day)
