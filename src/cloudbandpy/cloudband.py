@@ -56,7 +56,7 @@ class CloudBand(object):
         """
         with open(filename, "rb") as f:
             data = pickle.load(f)
-             return cls(
+            return cls(
                 data["cloud_band_array"],
                 data["area"],
                 data["lats"],
