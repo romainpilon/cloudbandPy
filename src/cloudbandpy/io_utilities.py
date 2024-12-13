@@ -368,8 +368,8 @@ def write_cloud_bands_to_netcdf(
         for object_index, cloud_band in enumerate(cbdays):
             # date_number[day_index, object_index] = cloud_band.date_number
             area[day_index, object_index] = cloud_band.area
-            latcenters[day_index, object_index] = cloud_band.latloncenter[0]
-            loncenters[day_index, object_index] = cloud_band.latloncenter[1]
+            latcenters[day_index, object_index] = cloud_band.lat_centroid
+            loncenters[day_index, object_index] = cloud_band.lon_centroid
             angle[day_index, object_index] = cloud_band.angle
             cbid[day_index, object_index] = cloud_band.id_
 

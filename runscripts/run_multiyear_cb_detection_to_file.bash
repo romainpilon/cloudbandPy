@@ -77,7 +77,7 @@ create_tmp_config() {
 main() {
     tmpdir_config=~/tmp
     [[ ! -d "${tmpdir_config}" ]] && mkdir "${tmpdir_config}"
-    declare -a domains=("southPacific") # "northPacific" "southIndianOcean" "southAtlantic" "southernhemisphere" "northernhemisphere")
+    declare -a domains=("southPacific" "northPacific" "southIndianOcean" "southAtlantic" "southernhemisphere" "northernhemisphere")
     years=($(seq $YEAR_START $YEAR_END))
     echo $years
     local year="${years[${SLURM_ARRAY_TASK_ID}]}"

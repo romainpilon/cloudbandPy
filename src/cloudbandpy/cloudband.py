@@ -13,31 +13,28 @@ class CloudBand(object):
     def __init__(
         self,
         cloud_band_array: np.ndarray,
+        date: np.int32,
         area: float,
         lats: np.ndarray,
         lons: np.ndarray,
-        date: np.int32,
+        angle: np.float32,
+        lon_centroid=np.float16,
+        lat_centroid=np.float16,
         iscloudband: bool = True,
         connected_longitudes: bool = False,
         parents: set[str] = set(),
-        connected2pv: bool = False,
-        connected2eqwave: bool = False,
     ):
         self.cloud_band_array = cloud_band_array
         self.date = date
         self.area = area
-        # return a list, here we've got only one cloud band --> [0]
-        regions_props = measure.regionprops(self.cloud_band_array)[0]
-        # center of ellipse around cloud band
-        self.latloncenter = regions_props.centroid
-        # angle between the minor axis and the horizontal, at the centroid
-        self.angle = (regions_props.orientation * 360) / (2 * np.pi)
+        self.angle = angle
+        self.lon_centroid = lon_centroid
+        self.lat_centroid = lat_centroid
         # Label/id of the cloud band
         self.parents = parents
-        self.connected2pv = connected2pv
-        self.connected2eqwave = connected2eqwave
         # id = "date _ longitude (location)"
-        self.id_ = int(f"{self.date}_{round(self.latloncenter[1])}")
+        # self.id_ = int(f"{self.date}_{round(self.lon_centroid)}")
+        self.id_ = int(f"{self.date}{round(self.lon_centroid % 360):03d}")
         #
         self.lats = lats
         self.lons = lons
@@ -58,10 +55,13 @@ class CloudBand(object):
             data = pickle.load(f)
             return cls(
                 data["cloud_band_array"],
+                data["date"],
                 data["area"],
                 data["lats"],
                 data["lons"],
-                data["date"],
+                data["angle"],
+                data["lon_centroid"],
+                data["lat_centroid"],
                 data["iscloudband"],
                 data["connected_longitudes"],
                 data["parents"],
@@ -77,12 +77,15 @@ class CloudBand(object):
         """
         return cls(
             d["cloud_band_array"],
+            d["date"],
             d["area"],
             d["lats"],
             d["lons"],
-            d["date"],
-            d["connected_longitudes"],
+            d["angle"],
+            d["lon_centroid"],
+            d["lat_centroid"],
             d["iscloudband"],
+            d["connected_longitudes"],
             d["parents"],
         )
 
@@ -97,12 +100,15 @@ class CloudBand(object):
              pickle.dump(
                 {
                     "cloud_band_array": self.cloud_band_array,
+                    "date": self.date,
                     "area": self.area,
                     "lats": self.lats,
                     "lons": self.lons,
-                    "date": self.date_number,
-                    "connected_longitudes": self.connected_longitudes,
+                    "angle": self.angle,
+                    "lon_centroid": self.lon_centroid,
+                    "lat_centroid": self.lat_centroid,
                     "iscloudband": self.iscloudband,
+                    "connected_longitudes": self.connected_longitudes,
                     "parents": self.parents,
                 },
                 f,
@@ -116,12 +122,15 @@ class CloudBand(object):
         """
         return {
             "cloud_band_array": self.cloud_band_array,
+            "date": self.date,
             "area": self.area,
             "lats": self.lats,
             "lons": self.lons,
-            "date": self.date,
-            "connected_longitudes": self.connected_longitudes,
+            "angle": self.angle,
+            "lon_centroid": self.lon_centroid,
+            "lat_centroid": self.lat_centroid,
             "iscloudband": self.iscloudband,
+            "connected_longitudes": self.connected_longitudes,
             "parents": self.parents,
         }
 
