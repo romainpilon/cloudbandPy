@@ -1,4 +1,4 @@
-# Cloud band detection configuration file for North Pacific basin
+# Cloud band detection configuration file for southern hemisphere
 
 # Compute the inheritance of each cloud band
 run_inheritance_tracking: True
@@ -42,7 +42,7 @@ parameters_file: './cloudbandPy/parameters/parameters_southhemisphere.yml'
 saved_dirpath: './cloud_band_files' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of the input variable
-save_listcloudbands: False # Pickle bin files of list containing lists of cloud band (1 list per day)
+save_listcloudbands: True # Pickle bin files of list containing lists of cloud band (1 list per day)
 save_cloudbands_netcdf: True # netCDF4 files containing cloud band masks and cloud band characteristics
 
 # To load pickle bin files saved in saved_dirpath and not load files containing raw data
