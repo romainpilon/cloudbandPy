@@ -8,11 +8,19 @@ Run cloudbandPy/runscripts/run.py cloudbandPy/config/config_cbworkflow_southPaci
 
 import logging
 import os
+import numpy as np
 
 from cloudbandpy.load_driver import run_load_data
 
 from cloudbandpy.cb_detection import detection_workflow
-from cloudbandpy.figure_tools import *
+from cloudbandpy.figure_tools import (
+    check_figure,
+    plot_bbox_around_blobs,
+    plot_overlay_of_cloudbands,
+    show_blob_detection_process,
+    plot_time_evolution_blobs,
+    plot_time_evolution_inputvar_cloubdands
+)
 from cloudbandpy.io_utilities import (
     logging_setup,
     load_ymlfile,
