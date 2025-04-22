@@ -19,14 +19,16 @@ lat_south: 10
 # Input files directory
 clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
-# calculate daily mean of the input variable for detection
-qd_var: True
-# temporal resolution of the input data
-datatimeresolution: 3.0 # [hour]
-# interval of detection in hours of wished period: 24h, 12h, 6h, 3h or 1h
-period_detection: 24.
-# needs conversion to W.m-2
-olr_convert2wm2: True
+datatimeresolution: 3.0  # temporal resolution of the input data (hour)
+period_detection: 24.    # interval of detection in hours of wished period: 24h, 12h, 6h, 3h or 1h
+
+# PRE‑DETECTION SMOOTHING
+qd_var: True             # calculate daily mean of the input variable for detection
+avg_var: True            # do the pre‑detection averaging
+avg_hours: 24            # length of averaging window (must be multiple of `datatimeresolution`): Same as `period_detection`
+
+olr_convert2wm2: True    # convert OLR to W/m2
+
 # variable names in the input data
 varname: 'ttr'
 timecoord_name: 'time'

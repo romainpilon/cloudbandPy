@@ -21,12 +21,12 @@ lat_south: -50
 clouddata_path: './ERA5/netcdf/3hourly/surface_level'
 varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
 datatimeresolution: 3.0 # temporal resolution of the input data (hour)
-period_detection: 24.    # interval of detection in hours of wished period: 24h, 12h, 6h, 3h or 1h
+period_detection: 6.    # interval of detection in hours of wished period: 24h, 12h, 6h, 3h or 1h
 
 # PRE‑DETECTION SMOOTHING
 qd_var: True            # calculate daily mean of the input variable for detection
 avg_var: True           # do the pre‑detection averaging
-avg_hours: 24            # length of averaging window (must be multiple of `datatimeresolution`): Same as `period_detection`
+avg_hours: 6            # length of averaging window (must be multiple of `datatimeresolution`): Same as `period_detection`
 
 olr_convert2wm2: True   # convert OLR to W/m2
 
@@ -42,10 +42,10 @@ select_djfm: False
 parameters_file: './cloudbandPy/parameters/parameters_southhemisphere.yml'
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
-saved_dirpath: './cloud_band_files' # directory where files will be saved
+saved_dirpath: './cloud_band_files_6hours' # directory where files will be saved
 
 save_dailyvar: False # save daily mean of the input variable
-save_listcloudbands: True # Pickle bin files of list containing lists of cloud band (1 list per day)
+save_listcloudbands: False # Pickle bin files of list containing lists of cloud band (1 list per day)
 save_cloudbands_netcdf: True # netCDF4 files containing cloud band masks and cloud band characteristics
 
 # To load pickle bin files saved in saved_dirpath and not load files containing raw data

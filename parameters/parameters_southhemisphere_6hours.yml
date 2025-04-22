@@ -1,0 +1,30 @@
+# Cloud band identification parameters for the southern hemisphere
+hemisphere: "south"
+
+OLR_THRESHOLD: 210 # W.m-2
+# Thresholding method. By default, it will use OLR_THRESHOLD as threshold.
+# You may choose "yen" or "otsu" (automatic histogram-based thresholding methods) for testing purpose.
+thresholding_method: 0
+
+CLOUD_BAND_AREA_THRESHOLD: 10e5 # km2
+# Cloud band must cross the tropical line
+TOP_LATITUDE: -20
+BOTTOM_LATITUDE: -27
+# Clouds bands must have a certain inclinaton (top: NW, bottom: SE)
+ANGLE_MIN: -90
+ANGLE_MAX: -5
+
+# Inheritance tracking parameters
+# Overlap fraction threshold. Clouds that overlap more than this between times are tracked.
+# A value of 10% allows to avoid temporal connection with one-pixel overlap.
+# If threshold set to 0, the code will connect two consecutive cloud bands with any overlap.
+othresh: 0.
+
+# --- new optional smoothing section ---------------------------------
+SMOOTHING_METHOD:        spatial_uniform   #  none | gaussian_time | spatial_uniform | gaussian_space+spatial_uniform # for daily detection -> none
+GAUSSIAN_SIGMA_STEPS:    2                 # 1 σ = 1 three‑hour ERA5 step  (=3 h)
+UNIFORM_WINDOW_DEG:      1                 # side length of the square box in degrees # no smoothing if value <= data resolution
+# --------------------------------------------------------------------
+CLOSING_RADIUS_PX:       1                 # morphological closing after threshold (default: 0)
+DILATION_RADIUS_PX:      1                 # keep small to avoid merging bands (default: 1)
+# --------------------------------------------------------------------

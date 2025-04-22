@@ -13,6 +13,7 @@ import numpy as np
 import os
 import pickle
 import yaml
+import warnings
 
 from .cloudband import CloudBand
 from .misc import is_decreasing, convert_olr_in_wm2, wrapTo180
@@ -128,8 +129,10 @@ def load_dataset(config: dict) -> tuple:
     )
     del variable
     # Create daily mean of the input variable?
-    if config["qd_var"]:
-        variable4cb = make_daily_average(variable4cb, timein, config)
+    # if config["qd_var"]:
+    #     variable4cb = make_daily_average(variable4cb, timein, config)
+    if config.get("AVG_VAR", config.get("qd_var", False)):
+        variable4cb = make_period_average(variable4cb, timein, config)
         # Save daily variable (and latitudes and longitudes)
         if config["save_dailyvar"]:
             logger.info("Saving daily variable")
@@ -209,25 +212,69 @@ def get_ids_start_end4timecrop(itime, config, inputtime: np.ndarray) -> tuple:
     return id_start, id_end
 
 
-def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, config: dict) -> np.ndarray:
+# ---------------------------------------------------------------------------
+# NEW: generic averaging over any period (replaces make_daily_average)
+# ---------------------------------------------------------------------------
+def make_period_average(
+    variable2process: np.ndarray, inputtime: np.ndarray, config: dict
+) -> np.ndarray:
     """
-    Calculate the daily average of the input variable
-    Uses the config file for the time step of the data
+    Average the input variable over a sliding window of length
+    `config['AVG_HOURS']` (defaults to `config['period_detection']`).
+    Works for 24‑, 12‑, 6‑, 3‑ or 1‑hour detection provided
+    `AVG_HOURS` is an integer multiple of `config['datatimeresolution']`.
     """
-    logger = logging.getLogger("io_utilities.make_daily_average")
-    logger.info("Computation of daily average")
-    daily_tmp_variable = []
-    listofdates = create_list_of_dates(config)
-    for itime in listofdates:
-        # Select indexes to make daily average
-        id_start, id_end = get_ids_start_end4timecrop(itime, config, inputtime=inputtime)
-        # Daily mean of the input variable (OLR). Works as smoothing
-        variable4cb = np.nanmean(variable2process[id_start:id_end, ...], 0)
-        daily_tmp_variable.append(variable4cb)
-    # Stack list of daily averages
-    daily_variable = np.stack(daily_tmp_variable)
-    logger.info("Computation of daily average done")
-    return daily_variable
+    logger = logging.getLogger("io_utilities.make_period_average")
+    logger.info("Computation of period average")
+
+    avg_hours = int(config.get("AVG_HOURS", config["period_detection"]))
+    dt_data   = int(config["datatimeresolution"])
+
+    if avg_hours % dt_data:
+        raise ValueError(
+            f"AVG_HOURS ({avg_hours}) must be a multiple of DATATIMERESOLUTION ({dt_data})."
+        )
+
+    interval = avg_hours // dt_data            # number of input steps to average
+    dates    = create_list_of_dates(config)    # still uses PERIOD_DETECTION
+
+    out = []
+    for itime in dates:
+        # indices bounding the averaging window
+        id_start = np.where(inputtime == itime)[0][0]
+        id_end   = id_start + interval
+        out.append(np.nanmean(variable2process[id_start:id_end, ...], axis=0))
+
+    logger.info("Computation of period average done")
+    return np.stack(out)
+
+# kept for backward compatibility – will be removed in the next major bump
+def make_daily_average(variable2process, inputtime, config):
+    warnings.warn(
+        "make_daily_average() is deprecated – use make_period_average().",
+        DeprecationWarning,
+    )
+    return make_period_average(variable2process, inputtime, config)
+
+# def make_daily_average(variable2process: np.ndarray, inputtime: np.ndarray, config: dict) -> np.ndarray:
+#     """
+#     Calculate the daily average of the input variable
+#     Uses the config file for the time step of the data
+#     """
+#     logger = logging.getLogger("io_utilities.make_daily_average")
+#     logger.info("Computation of daily average")
+#     daily_tmp_variable = []
+#     listofdates = create_list_of_dates(config)
+#     for itime in listofdates:
+#         # Select indexes to make daily average
+#         id_start, id_end = get_ids_start_end4timecrop(itime, config, inputtime=inputtime)
+#         # Daily mean of the input variable (OLR). Works as smoothing
+#         variable4cb = np.nanmean(variable2process[id_start:id_end, ...], 0)
+#         daily_tmp_variable.append(variable4cb)
+#     # Stack list of daily averages
+#     daily_variable = np.stack(daily_tmp_variable)
+#     logger.info("Computation of daily average done")
+#     return daily_variable
 
 def load_npydata(filename: str = None, config: dict = None, varname: str = None) -> np.ndarray:
     if not filename and not config:

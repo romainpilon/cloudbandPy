@@ -48,7 +48,16 @@ def blob_detection(
     # Binarize the data and fill holes
     fill_binarize_data = ndi.binary_fill_holes(input_variable < thresh_value)
     # We apply a morphological dilation: adds pixels to the boundaries of each objects
-    dilation = morphology.dilation(fill_binarize_data)
+    # Optional morphological closing BEFORE dilation
+    closing_px = int(parameters.get("CLOSING_RADIUS_PX", 0))
+    if closing_px > 0:
+        fill_binarize_data = morphology.closing(
+            fill_binarize_data, morphology.disk(closing_px))
+
+    # Dilation (now with configurable radius)
+    dil_px = int(parameters.get("DILATION_RADIUS_PX", 1))
+    dilation = morphology.dilation(
+        fill_binarize_data, morphology.disk(dil_px))
     # -- Connected Components Labelling
     labelled_blobs = measure.label(dilation, connectivity=2, background=0)
     """
@@ -206,6 +215,30 @@ def detection_workflow(
     """
     logger = logging.getLogger("cb_detection.detection_workflow")
     logger.info("Cloud band detection in progress")
+    # ------------------------------------------------------------------
+    #  A) optional pre–threshold smoothing of the 3‑D (time,lat,lon) field
+    # ------------------------------------------------------------------
+    method = parameters.get("SMOOTHING_METHOD", "none").lower()
+    if method == "gaussian_time":
+        sigma = float(parameters.get("GAUSSIAN_SIGMA_STEPS", 2))      # steps of 3 h each
+        var2process = ndi.gaussian_filter1d(var2process,
+                                            sigma=sigma, axis=0,
+                                            mode="nearest")
+    elif method == "spatial_uniform":
+        win_deg = float(parameters.get("UNIFORM_WINDOW_DEG", 1.0))
+        # convert ° to integer pixels – works for regular grids
+        dlat = abs(latitudes[1] - latitudes[0])
+        dlon = abs(longitudes[1] - longitudes[0])
+        win_lat = max(1, int(round(win_deg / dlat)))
+        win_lon = max(1, int(round(win_deg / dlon)))
+        var2process = ndi.uniform_filter(var2process,
+                                         size=(1, win_lat, win_lon),
+                                         mode="nearest")
+    # 'none' → do nothing
+    # ------------------------------------------------------------------
+    
+    
+    
     fill_binarize_data = np.zeros_like(var2process, dtype=np.uint8)
     dilation = np.zeros_like(var2process, dtype=np.uint8)
     labelled_blobs = np.zeros_like(var2process, dtype=np.uint8)

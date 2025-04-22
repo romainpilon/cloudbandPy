@@ -131,7 +131,7 @@ def plot_tracking_on_map(
         ax.text(
             0.95,
             0.75,
-            listofdates[inc].strftime("%Y-%m-%d"),
+            listofdates[inc].strftime("%Y-%m-%d %H"),
             verticalalignment="bottom",
             horizontalalignment="right",
             transform=ax.transAxes,

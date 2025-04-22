@@ -10,7 +10,10 @@ saved_dirpath: './cloud_band_files'
 dir_figures: './cloud_band_figures/'
 load_saved_files: True
 
+datatimeresolution: 3.0
 period_detection: 24.
+avg_var: True
+avg_hours: 24
 
 select_djfm: False
 
