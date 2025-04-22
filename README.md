@@ -65,6 +65,10 @@ Default settings:
 - Cloud band masks and characteristics are written to netCDF4 files and stored in a user defined directory.
 - Figures will be saved in a specific directory that will be created in the current directory.
 
+To run the detection algorithm at subdaily timestep:
+- 12 hours -> use the same configurations and parameters as daily;
+- 6 hours  -> use the specific configurations and parameters file.
+
 Example run scripts are located in the `runscripts` directories.
 
 To see specific use of the code, a set of notebooks are located in the `notebooks` directory.
