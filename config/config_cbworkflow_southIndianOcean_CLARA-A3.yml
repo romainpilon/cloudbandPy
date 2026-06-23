@@ -1,4 +1,4 @@
-# Cloud band detection configuration file for North Pacific basin
+# Cloud band detection configuration file for South Pacific basin
 
 # Compute the inheritance of each cloud band
 run_inheritance_tracking: True
@@ -8,13 +8,13 @@ startdate: "20160101.00"
 enddate: "20161231.00"
 
 # Domain
-domain: "northPacific"
-# Note: the northern border matters a lot: Polar regions has lots of cold clouds.
-hemisphere: "north"
-lon_west: 115
-lon_east: 260
-lat_north: 50
-lat_south: 8
+domain: "southIndianOcean"
+# Note: the southern border matters a lot: Polar regions has lots of cold clouds.
+hemisphere: "south"
+lon_west: 10
+lon_east: 80
+lat_north: -5
+lat_south: -50
 
 # Input files directory
 clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/CLARA-A3/CLARA_regridded_0.5deg/'

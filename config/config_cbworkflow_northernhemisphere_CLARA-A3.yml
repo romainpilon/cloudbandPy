@@ -1,4 +1,4 @@
-# Cloud band detection configuration file for North Pacific basin
+# Cloud band detection configuration file for northern hemisphere
 
 # Compute the inheritance of each cloud band
 run_inheritance_tracking: True
@@ -8,13 +8,13 @@ startdate: "20160101.00"
 enddate: "20161231.00"
 
 # Domain
-domain: "northPacific"
+domain: "northernhemisphere"
 # Note: the northern border matters a lot: Polar regions has lots of cold clouds.
 hemisphere: "north"
-lon_west: 115
-lon_east: 260
+lon_west: 0
+lon_east: 360
 lat_north: 50
-lat_south: 8
+lat_south: 10
 
 # Input files directory
 clouddata_path: '/work/FAC/FGSE/IDYST/ddomeise/default/DATA/CLARA-A3/CLARA_regridded_0.5deg/'
@@ -37,7 +37,7 @@ ycoord_name: 'latitude'
 select_djfm: False
 
 # Parameters file for cloud band detection
-parameters_file: '/users/rpilon/codes/unil/cloudbandPy/parameters/parameters_southhemisphere.yml'
+parameters_file: '/users/rpilon/codes/unil/cloudbandPy/parameters/parameters_northhemisphere.yml'
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
 saved_dirpath: '/work/FAC/FGSE/IDYST/ddomeise/default/romain/data/cloud_band_files_clara'
