@@ -66,6 +66,7 @@ create_tmp_config() {
     local domain=$1
     local year=$2
     local configname=config_cbworkflow_"${domain}"
+    # local configname=config_cbworkflow_"${domain}_CLARA-A3"
     local configpath="${CLOUDBANDPY_DIR}/config/${configname}.yml"
     local outfil="${tmpdir_config}/${configname}_${year}.yml"
     sed "s|2016|${year}|g" "${configpath}" >"${outfil}"
@@ -89,6 +90,7 @@ main() {
         echo "${domain}"
         create_tmp_config "${domain}" "${year}"
         local configfilename=config_cbworkflow_"${domain}_${year}.yml"
+        # local configfilename=config_cbworkflow_"${domain}_CLARA-A3_${year}.yml"
         local configpath="${tmpdir_config}/${configfilename}"
         echo "${CLOUDBANDPY_DIR}" "${configpath}"
         python "${CLOUDBANDPY_DIR}/runscripts/run.py" "${configpath}"

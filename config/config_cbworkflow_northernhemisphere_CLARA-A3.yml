@@ -1,4 +1,4 @@
-# Cloud band detection configuration file for South Pacific basin
+# Cloud band detection configuration file for northern hemisphere
 
 # Compute the inheritance of each cloud band
 run_inheritance_tracking: True
@@ -8,27 +8,28 @@ startdate: "20160101.00"
 enddate: "20161231.00"
 
 # Domain
-domain: "southIndianOcean"
-# Note: the southern border matters a lot: Polar regions has lots of cold clouds.
-hemisphere: "south"
+domain: "northernhemisphere"
+# Note: the northern border matters a lot: Polar regions has lots of cold clouds.
+hemisphere: "north"
 lon_west: 0
-lon_east: 115
-lat_north: -10
-lat_south: -50
+lon_east: 360
+lat_north: 50
+lat_south: 10
 
 # Input files directory
-clouddata_path: './ERA5/netcdf/3hourly/surface_level/'
-varname_infilename: 'top_net_thermal_radiation' # filename specific ("varname_year.nc")
+clouddata_path: "path/to/CLARA-A3/CLARA_regridded_0.5deg/"
+varname_infilename: 'OLRdm' 
+
 # calculate daily mean of the input variable for detection
-qd_var: True
+qd_var: False
 # temporal resolution of the input data
-datatimeresolution: 3.0 # [hour]
+datatimeresolution: 24.0 # [hour] - Updated for daily data
 # interval of detection in hours of wished period: 24h, 12h, 6h, 3h or 1h
 period_detection: 24.
 # needs conversion to W.m-2
-olr_convert2wm2: True
+olr_convert2wm2: False
 # variable names in the input data
-varname: 'ttr'
+varname: 'LW_flux'
 timecoord_name: 'time'
 xcoord_name: 'longitude'
 ycoord_name: 'latitude'
@@ -39,7 +40,7 @@ select_djfm: False
 parameters_file: "parameters/parameters_southhemisphere.yml"
 
 # Save cloud bands, dates with cloud bands (in numpy or pickle formats)
-saved_dirpath: './cloud_band_files' # directory where files will be saved
+saved_dirpath: "./output/cloud_band_files_clara"
 
 save_dailyvar: False # save daily mean of the input variable
 save_listcloudbands: True # Pickle bin files of list containing lists of cloud band (1 list per day)
